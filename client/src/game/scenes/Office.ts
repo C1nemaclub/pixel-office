@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import Phaser, { GameObjects } from 'phaser';
 import { GridEngine, GridEngineConfig, Direction } from 'grid-engine';
 import { Player } from '../../models/Player.model';
 
@@ -106,6 +106,8 @@ export class Office extends Phaser.Scene {
     console.log(this.gridEngine.getAllCharacters())
     this.gridEngine.removeCharacter(playerId)
     console.log(this.gridEngine.getAllCharacters())
-    // this.otherPlayersGroup.remove(playerId)
+    this.otherPlayersGroup.getChildren().forEach((player: GameObjects.GameObject)=>{
+      if(player.name === playerId) player.destroy()
+    })
   }
 }
