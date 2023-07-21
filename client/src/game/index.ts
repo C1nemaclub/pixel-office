@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GridEngine } from 'grid-engine';
-import { Boot } from './scenes';
+import { Boot, Office } from './scenes';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -32,5 +32,5 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
       gravity: { y: 0 },
     },
   },
-  scene: [Boot],
+  scene: [Boot, Office],
 };
