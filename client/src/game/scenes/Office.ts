@@ -19,10 +19,14 @@ export class Office extends Phaser.Scene {
 
     this.game.events.on('player-moved', (movementData: any)=>{
       console.log(movementData, "Phaser")
+      this.gridEngine.moveTo(movementData.id, {x: movementData.x, y: movementData.y})
     })
 
-    this.game.events.on('current-players', (players: any)=>{
+    this.game.events.on('current-players', (players: Player[])=>{
       console.log('Current Players', players)
+      players.forEach((player: Player)=>{
+        this.addOtherPlayer(player)
+      })
     })
 
     this.game.events.on('player-left', (id: string)=>{
@@ -71,6 +75,14 @@ export class Office extends Phaser.Scene {
       this.gridEngine.positionChangeStarted().subscribe((data)=>{
         this.game.events.emit('move', { x: data.enterTile.x, y: data.enterTile.y})
       })
+
+      const logo = this.physics.add.image(200,200,'logo').setScale(2)
+      //Player collision to logo
+      this.physics.add.collider(playerSprite, logo, ()=>{
+        console.log('Collided with logo')
+        logo.destroy()
+        
+      })
   }
 
   update(){
@@ -88,6 +100,17 @@ export class Office extends Phaser.Scene {
     }
   }
 
+  addPlayer(playerInfo: Player){
+    const { x, y, id } = playerInfo
+    const playerSprite = this.add.sprite(x,y, 'player').setName(id).setScale(1.5)
+    const playerName = this.add.text(0, -10, 'Player 1', {color: 'white', fontSize: '18px', fontStyle: 'bold'})
+    const container = this.add.container(0, 0, [playerSprite, playerName])
+    this.cameras.main.startFollow(container, true);
+    this.cameras.main.setFollowOffset( -playerSprite.width, -playerSprite.height );
+
+    // Add to GridEngine
+  }
+
   addOtherPlayer(playerInfo: Player){
     const { x, y, id } = playerInfo
     const otherPlayerSprite = this.add.sprite(x,y, 'player').setName(id).setScale(1.5)
@@ -100,12 +123,12 @@ export class Office extends Phaser.Scene {
         walkingAnimationMapping: 4,
         container
       })
+    this.gridEngine.setSpeed(id, 10)
     this.otherPlayersGroup.add(container)
   }
+
   removePlayer(playerId: string){
-    console.log(this.gridEngine.getAllCharacters())
     this.gridEngine.removeCharacter(playerId)
-    console.log(this.gridEngine.getAllCharacters())
     this.otherPlayersGroup.getChildren().forEach((player: GameObjects.GameObject)=>{
       if(player.name === playerId) player.destroy()
     })

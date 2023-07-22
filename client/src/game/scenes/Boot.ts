@@ -10,6 +10,7 @@ export class Boot extends Phaser.Scene {
     super('boot');
   }
   preload() {
+    this.load.image('logo', "./vite.svg")
     this.load.image('tiles1', './assets/FloorAndGround.png');
     this.load.image('tiles2', './assets/Modern_Office_Black_Shadow.png');
     this.load.tilemapTiledJSON('map', './assets/virtual-office.json');
