@@ -15,8 +15,8 @@ function App() {
     client.joinOrCreate('my_room').then((room) => {
       setRoom(room);
 
-      room.onMessage('current-players', (players:any)=>{
-        game?.events.emit('current-players', players)
+      room.onMessage('current-players', (players: Player[])=>{
+        game?.events.emit('current-players', { players, clientId: room.sessionId })
       })
 
       room.onMessage('new-player', (player: Player) => {

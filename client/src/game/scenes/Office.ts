@@ -13,7 +13,6 @@ export class Office extends Phaser.Scene {
 
   create() {
     this.game.events.on('new-player', (player: Player) => {
-      console.log(player, 'new player from phaser');
       this.addOtherPlayer(player)
     });
 
@@ -22,10 +21,13 @@ export class Office extends Phaser.Scene {
       this.gridEngine.moveTo(movementData.id, {x: movementData.x, y: movementData.y})
     })
 
-    this.game.events.on('current-players', (players: Player[])=>{
-      console.log('Current Players', players)
-      players.forEach((player: Player)=>{
-        this.addOtherPlayer(player)
+    this.game.events.on('current-players', (data: {players: Player[], clientId: string})=>{
+      data.players.forEach((player: Player)=>{
+        if(player.id === data.clientId){
+          this.addPlayer({id: 'player', x: player.x, y: player.y})          
+        } else{
+          this.addOtherPlayer(player)
+        }
       })
     })
 
@@ -59,18 +61,18 @@ export class Office extends Phaser.Scene {
 
     const gridEngineConfig: GridEngineConfig = {
         characters: [
-          {
-            id: 'player',
-            sprite: playerSprite,
-            container: container,
-            walkingAnimationMapping: 6,
-            startPosition: { x: 14, y: 10 },
-          },
+          // {
+          //   id: 'player',
+          //   sprite: playerSprite,
+          //   container: container,
+          //   walkingAnimationMapping: 6,
+          //   startPosition: { x: 14, y: 10 },
+          // },
         ],
       };
 
       this.gridEngine.create(tileMap, gridEngineConfig);
-      this.gridEngine.setSpeed('player', 10);
+      // this.gridEngine.setSpeed('player', 10);
 
       this.gridEngine.positionChangeStarted().subscribe((data)=>{
         this.game.events.emit('move', { x: data.enterTile.x, y: data.enterTile.y})
@@ -83,11 +85,12 @@ export class Office extends Phaser.Scene {
         logo.destroy()
         
       })
+
   }
 
   update(){
     const cursors = this.input.keyboard?.createCursorKeys();
-    if (cursors) {
+    if (cursors && this.gridEngine.hasCharacter('player')) {
       if (cursors.left.isDown) {
         this.gridEngine.move('player', Direction.LEFT);
       } else if (cursors.right.isDown) {
@@ -108,7 +111,14 @@ export class Office extends Phaser.Scene {
     this.cameras.main.startFollow(container, true);
     this.cameras.main.setFollowOffset( -playerSprite.width, -playerSprite.height );
 
-    // Add to GridEngine
+    this.gridEngine.addCharacter({
+      id,
+      sprite: playerSprite,
+      container,
+      walkingAnimationMapping: 6,
+      startPosition: { x, y }
+    })
+    this.gridEngine.setSpeed(id, 10)
   }
 
   addOtherPlayer(playerInfo: Player){

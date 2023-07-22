@@ -32,12 +32,13 @@ export class MyRoom extends Room<MyRoomState> {
     };
 
     this.broadcastToAllButMe(client, 'new-player', players[client.sessionId]);
-    client.send('current-players', this.getOtherPlayers(client))
+    client.send('current-players', this.getAllPlayers())
 
 
 
     this.onMessage('move', (client, movementData) => {      
       console.log(movementData, client.sessionId)
+      players[client.sessionId] = { ...players[client.sessionId], x: movementData.x, y: movementData.y }
       this.broadcastToAllButMe(client, 'player-moved', {
         id: client.sessionId,
         ...movementData
@@ -62,5 +63,8 @@ export class MyRoom extends Room<MyRoomState> {
 
   getOtherPlayers(client: Client) {
     return Object.values(players).filter((player: Player)=> player.id !== client.sessionId)
+  }
+  getAllPlayers(){
+    return Object.values(players)
   }
 }
