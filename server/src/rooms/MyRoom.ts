@@ -23,7 +23,7 @@ export class MyRoom extends Room<MyRoomState> {
   }
 
   onJoin(client: Client, options: any) {
-    console.log(client.sessionId, 'joined!');
+    console.log(client.sessionId, 'joined!' , options);
 
     players[client.sessionId] = {
       id: client.sessionId,

@@ -22,6 +22,7 @@ export class Office extends Phaser.Scene {
     })
 
     this.game.events.on('current-players', (data: {players: Player[], clientId: string})=>{
+      console.log(data)
       data.players.forEach((player: Player)=>{
         if(player.id === data.clientId){
           this.addPlayer({id: 'player', x: player.x, y: player.y})          
@@ -70,6 +71,7 @@ export class Office extends Phaser.Scene {
           // },
         ],
       };
+
 
       this.gridEngine.create(tileMap, gridEngineConfig);
       // this.gridEngine.setSpeed('player', 10);
