@@ -3,41 +3,44 @@ import { client } from '../colyseus';
 import { Room, RoomAvailable } from 'colyseus.js';
 import Phaser from 'phaser';
 import { Player } from '../models/Player.model';
+import { phaserEvent } from '../events/EventHandler';
 
-
-
-function useRoom(game: Phaser.Game | null) {
+function useRoom() {
   const [room, setRoom] = useState<Room | null>(null);
-  const [name, setName] = useState<string>('')
-  const [skinIndex, setSkinIndex] = useState<number>(0)
+  const [name, setName] = useState<string>('');
+  const [skinIndex, setSkinIndex] = useState<number>(0);
   const [availableRooms, setAvailableRooms] = useState<RoomAvailable[]>([]);
-
 
   const joinOrCreate = () => {
     client.joinOrCreate('my_room', { name }).then((room) => {
       setRoom(room);
-      room.onMessage('current-players', (players: Player[]) => {
-        game?.events.emit('current-players', {
-          players,
-          clientId: room.sessionId,
-        });
-      });
+      // room.onMessage('current-players', (players: Player[]) => {
+      //   phaserEvent.emit('lmao', players);
 
-      room.onMessage('new-player', (player: Player) => {
-        game?.events.emit('new-player', player);
-      });
+      //   //Wait for game to be ready
+      //   // game?.events.once('ready', () => {
+      //   // console.log('current-players', players);
+      //   // game?.events.emit('current-players', {
+      //   //   players,
+      //   //   clientId: room.sessionId,
+      //   // });
+      // });
 
-      room.onMessage('player-moved', (movementData: any) => {
-        game?.events.emit('player-moved', movementData);
-      });
+      // room.onMessage('new-player', (player: Player) => {
+      //   game?.events.emit('new-player', player);
+      // });
 
-      room.onMessage('player-left', (id: string) => {
-        game?.events.emit('player-left', id);
-      });
+      // room.onMessage('player-moved', (movementData: any) => {
+      //   game?.events.emit('player-moved', movementData);
+      // });
 
-      game?.events.on('progress', (value: number) => {
-        console.log('progress Front', value);
-      });
+      // room.onMessage('player-left', (id: string) => {
+      //   game?.events.emit('player-left', id);
+      // });
+
+      // game?.events.on('progress', (value: number) => {
+      //   console.log('progress Front', value);
+      // });
     });
   };
 
@@ -46,18 +49,32 @@ function useRoom(game: Phaser.Game | null) {
     setAvailableRooms(rooms);
   };
 
+  useEffect(() => {
+    getAvailableRooms();
+    // game?.events.on('move', (data: number) => {
+    //   room?.send('move', data);
+    // });
 
-    useEffect(() => {
-      getAvailableRooms();
-      game?.events.on('move', (data: number) => {
-        room?.send('move', data);
-      });
-      // game?.events.on('progress', (value: number) => {
-      //   console.log('progress Front', value);
+    if (room) {
+      // room.onMessage('new-player', (player: Player) => {
+      //   console.log('new-player', player);
+      //   game?.events.emit('new-player', player);
       // });
-    }, [room, game])
+    }
+    // game?.events.on('progress', (value: number) => {
+    //   console.log('progress Front', value);
+    // });
+  }, [room]);
 
-  return { joinOrCreate, room, availableRooms, name, setName, skinIndex, setSkinIndex };
+  return {
+    joinOrCreate,
+    room,
+    availableRooms,
+    name,
+    setName,
+    skinIndex,
+    setSkinIndex,
+  };
 }
 
 export default useRoom;

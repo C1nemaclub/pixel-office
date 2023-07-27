@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GridEngine } from 'grid-engine';
-import { Boot, Office } from './scenes';
+import { Background, Boot, Office } from './scenes';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -9,8 +9,10 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     antialias: false,
   },
   scale: {
-    mode: Phaser.Scale.FIT,
+    // mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+    //Resize
+    mode: Phaser.Scale.RESIZE,
     width: window.innerWidth,
     height: window.innerHeight,
     // width: 700,
@@ -32,5 +34,5 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
       gravity: { y: 0 },
     },
   },
-  scene: [Boot, Office],
+  scene: [Boot, Office, Background],
 };

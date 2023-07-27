@@ -10,7 +10,7 @@ export class Boot extends Phaser.Scene {
     super('boot');
   }
   preload() {
-    this.load.image('logo', "./vite.svg")
+    this.load.image('logo', './vite.svg');
     this.load.image('tiles1', './assets/FloorAndGround.png');
     this.load.image('tiles2', './assets/Modern_Office_Black_Shadow.png');
     this.load.tilemapTiledJSON('map', './assets/virtual-office.json');
@@ -22,15 +22,18 @@ export class Boot extends Phaser.Scene {
       frameHeight: 72,
     });
 
+    this.load.image('background', './assets/background.png');
+
     // on Complete
     this.load.on('complete', () => {
       console.log('Loading Complete');
-      this.scene.start('office');
+      this.scene.launch('background')
+      // this.scene.start('office');
     });
 
     this.load.on('progress', (value: number) => {
       console.log('Progress: ', value);
-      this.game.events.emit('progress', value)
+      this.game.events.emit('progress', value);
     });
   }
   async create() {
