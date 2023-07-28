@@ -12,16 +12,14 @@ export default function useGame(
   const [game, setGame] = useState<Phaser.Game | null>(null);
 
   useEffect(() => {
-    if (parentEl.current && !game && room) {
+    if (parentEl.current && !game) {
       const newGame = new Phaser.Game({ ...config, parent: parentEl.current });
       setGame(newGame);
     }
     return () => game?.destroy(true);
-  }, [game, parentEl, config, room]);
+  }, [game, parentEl, config]);
 
   useEffect(() => {
-    if (game) {
-    }
     if (room && game && parentEl.current) {
       //Ask if game is ready
 

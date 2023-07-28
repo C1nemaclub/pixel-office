@@ -14,57 +14,9 @@ function useRoom() {
   const joinOrCreate = () => {
     client.joinOrCreate('my_room', { name }).then((room) => {
       setRoom(room);
-      // room.onMessage('current-players', (players: Player[]) => {
-      //   phaserEvent.emit('lmao', players);
-
-      //   //Wait for game to be ready
-      //   // game?.events.once('ready', () => {
-      //   // console.log('current-players', players);
-      //   // game?.events.emit('current-players', {
-      //   //   players,
-      //   //   clientId: room.sessionId,
-      //   // });
-      // });
-
-      // room.onMessage('new-player', (player: Player) => {
-      //   game?.events.emit('new-player', player);
-      // });
-
-      // room.onMessage('player-moved', (movementData: any) => {
-      //   game?.events.emit('player-moved', movementData);
-      // });
-
-      // room.onMessage('player-left', (id: string) => {
-      //   game?.events.emit('player-left', id);
-      // });
-
-      // game?.events.on('progress', (value: number) => {
-      //   console.log('progress Front', value);
-      // });
     });
   };
 
-  const getAvailableRooms = async () => {
-    const rooms = await client.getAvailableRooms();
-    setAvailableRooms(rooms);
-  };
-
-  useEffect(() => {
-    getAvailableRooms();
-    // game?.events.on('move', (data: number) => {
-    //   room?.send('move', data);
-    // });
-
-    if (room) {
-      // room.onMessage('new-player', (player: Player) => {
-      //   console.log('new-player', player);
-      //   game?.events.emit('new-player', player);
-      // });
-    }
-    // game?.events.on('progress', (value: number) => {
-    //   console.log('progress Front', value);
-    // });
-  }, [room]);
 
   return {
     joinOrCreate,

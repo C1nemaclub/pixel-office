@@ -24,13 +24,16 @@ export class Background extends Phaser.Scene {
       this.game.canvas.width * 2,
       this.game.canvas.height
     );
+    // this.scene.launch('office').bringToTop('office');
+  }
+  launchOffice() {
     this.scene.launch('office').bringToTop('office');
   }
 
   update() {
     // scroll background
     //   Scroll the background to the left
-    this.backgroundImage.tilePositionX -= 1;
+    this.backgroundImage.tilePositionX -= 0.4;
 
     // If the this.backgroundImage reaches its maximum width (when scrolling to the left)
     if (this.backgroundImage.tilePositionX <= -this.backgroundImage.width) {

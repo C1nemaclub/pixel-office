@@ -7,11 +7,15 @@ import { Player } from './models/Player.model';
 import SelectionScreen from './components/SelectionScreen/SelectionScreen';
 import useRoom from './hooks/useRoom';
 import MainModal from './components/SelectionScreen/MainModal/MainModal';
+import JoinModal from './components/JoinModal/JoinModal';
+// import { Background } from './game/scenes';
+import { Background } from './game/scenes/Background';
 
-const MODAL_TYPES = {
+export const MODAL_TYPES = {
   MAIN: 'MAIN',
   JOIN: 'JOIN',
   CREATE: 'CREATE',
+  EMPTY: 'EMPTY',
 };
 
 function App() {
@@ -20,7 +24,7 @@ function App() {
   const { game } = useGame(parentEl, gameConfig, room);
   const [currentModal, setCurrentModal] = useState(MODAL_TYPES.MAIN);
 
-  const closeModalAndShow = (modalType) => {
+  const closeModalAndShow = (modalType: string) => {
     setCurrentModal(modalType);
   };
 
@@ -28,17 +32,28 @@ function App() {
     <div className='App'>
       <SelectionScreen setName={setName} name={name} />
       {currentModal === MODAL_TYPES.MAIN && (
+        // <MainModal onSwitch={closeModalAndShow} />
         <MainModal
-          onJoin={() => closeModalAndShow(MODAL_TYPES.JOIN)}
-          onCreate={() => closeModalAndShow(MODAL_TYPES.CREATE)}
+          onSwitch={() => {
+            joinOrCreate();
+            const backgroundScene = game?.scene.keys.background as Background;
+            backgroundScene.launchOffice()
+            closeModalAndShow(MODAL_TYPES.JOIN);
+          }}
         />
       )}
-      <button
-        onClick={joinOrCreate}
-        className='px-4 py-2 bg-teal-500 text-slate-50 hover:bg-teal-600'
-      >
-        Enter Room
-      </button>
+      {currentModal === MODAL_TYPES.JOIN && (
+        <JoinModal
+          onJoin={() => {
+            if (game) {
+              room?.send('join-game');
+              closeModalAndShow(MODAL_TYPES.EMPTY);
+            }
+          }}
+          onReturn={closeModalAndShow}
+        />
+      )}
+
       <button
         onClick={() => {
           room?.send('join-game');
