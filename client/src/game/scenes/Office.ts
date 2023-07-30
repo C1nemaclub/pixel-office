@@ -35,11 +35,10 @@ export class Office extends Phaser.Scene {
 
     this.game.events.on(
       'current-players',
-      (data: { players: Player[]; clientId: string }) => {
+      (data: { players: Player[]; clientId: string }) => {        
         data.players.forEach((player: Player) => {
           if (player.id === data.clientId) {
-            console.log('NMe');
-            this.addPlayer({ id: 'player', x: player.x, y: player.y });
+            this.addPlayer(player);
           } else {
             this.addOtherPlayer(player);
           }
@@ -128,15 +127,16 @@ export class Office extends Phaser.Scene {
   }
 
   addPlayer(playerInfo: Player) {
-    const { x, y, id } = playerInfo;
+    const { x, y, id, name, selectedChar } = playerInfo;
     const playerSprite = this.add
       .sprite(x, y, 'player')
       .setName(id)
       .setScale(1.5);
-    const playerName = this.add.text(0, -10, 'Player 1', {
+    const playerName = this.add.text(0, -10, name, {
       color: 'white',
       fontSize: '18px',
       fontStyle: 'bold',
+      align: 'center',
     });
     const container = this.add.container(0, 0, [playerSprite, playerName]);
     this.cameras.main.startFollow(container, true);
@@ -146,13 +146,13 @@ export class Office extends Phaser.Scene {
     );
 
     this.gridEngine.addCharacter({
-      id,
+      id: 'player',
       sprite: playerSprite,
       container,
-      walkingAnimationMapping: 6,
+      walkingAnimationMapping: selectedChar,
       startPosition: { x, y },
     });
-    this.gridEngine.setSpeed(id, 10);
+    this.gridEngine.setSpeed('player', 10);
   }
 
   addOtherPlayer(playerInfo: Player) {
@@ -165,6 +165,7 @@ export class Office extends Phaser.Scene {
       color: 'white',
       fontSize: '18px',
       fontStyle: 'bold',
+      align: 'center',
     });
     const container = this.add
       .container(0, 0, [otherPlayerSprite, otherPlayerName])

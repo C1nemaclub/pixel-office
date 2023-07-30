@@ -4,7 +4,6 @@ import { useGame } from './hooks';
 import { client } from './colyseus';
 import { Room, RoomAvailable } from 'colyseus.js';
 import { Player } from './models/Player.model';
-import SelectionScreen from './components/SelectionScreen/SelectionScreen';
 import useRoom from './hooks/useRoom';
 import MainModal from './components/SelectionScreen/MainModal/MainModal';
 import JoinModal from './components/JoinModal/JoinModal';
@@ -30,7 +29,6 @@ function App() {
 
   return (
     <div className='App'>
-      <SelectionScreen setName={setName} name={name} />
       {currentModal === MODAL_TYPES.MAIN && (
         // <MainModal onSwitch={closeModalAndShow} />
         <MainModal
@@ -44,9 +42,9 @@ function App() {
       )}
       {currentModal === MODAL_TYPES.JOIN && (
         <JoinModal
-          onJoin={() => {
+          onJoin={(selectedChar, name) => {
             if (game) {
-              room?.send('join-game');
+              room?.send('join-game', { selectedChar, name });
               closeModalAndShow(MODAL_TYPES.EMPTY);
             }
           }}

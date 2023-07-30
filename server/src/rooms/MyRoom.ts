@@ -26,11 +26,12 @@ export class MyRoom extends Room<MyRoomState> {
     console.log(client.sessionId, 'joined!' , options);
 
 
-    this.onMessage('join-game', (client, message) => {
+    this.onMessage('join-game', (client, playerData: {selectedChar: number, name: string}) => {
     players[client.sessionId] = {
       id: client.sessionId,
       x: 14,
       y: 10,
+      ...playerData
     };
       this.broadcastToAllButMe(client, 'new-player', players[client.sessionId]);
       client.send('current-players', this.getAllPlayers())
