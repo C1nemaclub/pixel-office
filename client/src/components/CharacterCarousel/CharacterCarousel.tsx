@@ -1,6 +1,5 @@
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { charsImgArray } from '../../utils/contants';
-import { type } from '@colyseus/schema';
 
 type CharacterCarouselProps = {
   activeChar: number;

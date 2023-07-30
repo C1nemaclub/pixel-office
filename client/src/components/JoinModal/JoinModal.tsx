@@ -1,5 +1,3 @@
-import {FaArrowLeft,FaArrowRight } from 'react-icons/fa';
-import { charsImgArray } from '../../utils/contants';
 import { useState } from 'react';
 import CharacterCarousel from '../CharacterCarousel/CharacterCarousel';
 
@@ -9,7 +7,7 @@ type JoinModalProps = {
   onReturn: (modalType: string) => void;
 };
 
-function JoinModal({ onJoin, onReturn }: JoinModalProps) {
+function JoinModal({ onJoin }: JoinModalProps) {
   const [activeChar, setActiveChar] = useState<number>(0) 
   const [name, setName] = useState<string>('')
 

@@ -1,10 +1,6 @@
-import { Room } from 'colyseus.js';
-import { GridEngine, GridEngineConfig, Direction } from 'grid-engine';
 import Phaser from 'phaser';
 
 export class Boot extends Phaser.Scene {
-  private gridEngine!: GridEngine;
-  private readonly TILE_SCALE = 2;
 
   constructor() {
     super('boot');

@@ -1,5 +1,4 @@
 import { FaLaptopCode } from 'react-icons/fa';
-import { MODAL_TYPES } from '../../../App';
 
 type MainModalProps = {
   onSwitch: () => void;

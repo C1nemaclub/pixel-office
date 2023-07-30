@@ -4,7 +4,7 @@ import { Room, RoomAvailable } from 'colyseus.js';
 
 function useRoom() {
   const [room, setRoom] = useState<Room | null>(null);
-  const [availableRooms, setAvailableRooms] = useState<RoomAvailable[]>([]);
+  const [availableRooms] = useState<RoomAvailable[]>([]);
 
   const joinOrCreate = () => {
     client.joinOrCreate('my_room', { name }).then((room) => {
