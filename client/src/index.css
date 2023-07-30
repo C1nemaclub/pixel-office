@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;600;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,6 +18,10 @@ html {
   margin: 0;
 }
 
+:root {
+  font: 'Raleway', sans-serif;
+}
+
 /* Tailwind style for button */
 .btn {
   @apply bg-indigo-700 rounded text-white font-bold py-2 px-4  border-2 border-indigo-700;
@@ -25,10 +30,56 @@ html {
   @apply bg-slate-50 rounded border-indigo-700 text-indigo-700 font-bold py-2 px-4  border-2 hover:bg-indigo-700 hover:text-white;
 }
 
-.custom-input{
+.custom-input {
   @apply border-2 border-indigo-700 rounded-md p-2;
 }
 
 .absolute-center {
   @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+}
+
+h1,h2,h3,h4,h5,h6, button,span, p{
+  font-family: 'Raleway', sans-serif;
+}
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+}
+.loader-container > span {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+.loader {
+  width: 200px;
+  height: 10px;
+  background: #3510dd;
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.inner_loader {
+  width: 60%;
+  height: 100%;
+  background: #d5d5d6;
+  border-radius: 50px;
+  animation: moveLeftRight 3s ease-in-out infinite;
+}
+
+@keyframes moveLeftRight {
+  0% {
+    transform: translateX(calc(-100% + 10px));
+  }
+
+  50% {
+    transform: translateX(calc(200px - 10px));
+  }
+
+  100% {
+    transform: translateX(calc(-100% + 10px));
+  }
 }

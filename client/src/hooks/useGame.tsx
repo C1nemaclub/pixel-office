@@ -10,10 +10,15 @@ export default function useGame(
   room: Room | null
 ) {
   const [game, setGame] = useState<Phaser.Game | null>(null);
+  const [gameLoading, setGameLoading] = useState<boolean>(true)
 
   useEffect(() => {
     if (parentEl.current && !game) {
+      setGameLoading(true)
       const newGame = new Phaser.Game({ ...config, parent: parentEl.current });
+      newGame.events.on('progress', (value: number)=>{
+        if(value === 1) setGameLoading(false)
+      })
       setGame(newGame);
     }
     return () => game?.destroy(true);
@@ -51,15 +56,18 @@ export default function useGame(
         game.events.emit('player-left', id);
       });
 
-      // game?.events.on('progress', (value: number) => {
-      //   console.log('progress Front', value);
-      // });
+      game?.events.on('progress', (value: number) => {
+        console.log('progress Front', value);
+      });
 
       game?.events.on('move', (data: number) => {
         room?.send('move', data);
       });
+
+
+
     }
   }, [game, room]);
 
-  return { game };
+  return { game, gameLoading };
 }

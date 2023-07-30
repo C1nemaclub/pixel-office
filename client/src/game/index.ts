@@ -27,7 +27,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
       },
     ],
   },
-  backgroundColor: '#48C4F8',
+  backgroundColor: '#363636',
   physics: {
     default: 'arcade',
     arcade: {

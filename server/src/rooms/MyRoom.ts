@@ -27,6 +27,7 @@ export class MyRoom extends Room<MyRoomState> {
 
 
     this.onMessage('join-game', (client, playerData: {selectedChar: number, name: string}) => {
+      console.log("join game", playerData)
     players[client.sessionId] = {
       id: client.sessionId,
       x: 14,

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { phaserEvent } from '../../events/EventHandler';
 
 export class Boot extends Phaser.Scene {
 
@@ -25,11 +26,17 @@ export class Boot extends Phaser.Scene {
       console.log('Loading Complete');
       this.scene.launch('background')
       // this.scene.start('office');
+      this.game.events.emit('complete');
     });
+
+    this.load.on('fileprogress', (file: any) => {
+      // console.log(file)
+    })
 
     this.load.on('progress', (value: number) => {
       console.log('Progress: ', value);
       this.game.events.emit('progress', value);
+      phaserEvent.emit('progress', value);
     });
   }
   async create() {

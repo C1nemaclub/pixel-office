@@ -35,7 +35,8 @@ export class Office extends Phaser.Scene {
 
     this.game.events.on(
       'current-players',
-      (data: { players: Player[]; clientId: string }) => {        
+      (data: { players: Player[]; clientId: string }) => {  
+        console.log(data, 'current playersaaa L MAO');      
         data.players.forEach((player: Player) => {
           if (player.id === data.clientId) {
             this.addPlayer(player);

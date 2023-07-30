@@ -4,7 +4,6 @@ import CharacterCarousel from '../CharacterCarousel/CharacterCarousel';
 
 type JoinModalProps = {
   onJoin: (selectedChar: number, name: string) => void;
-  onReturn: (modalType: string) => void;
 };
 
 function JoinModal({ onJoin }: JoinModalProps) {
