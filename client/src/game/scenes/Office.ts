@@ -68,14 +68,7 @@ export class Office extends Phaser.Scene {
     tileMap.createLayer(4, 'collision', 0, 0)?.setScale(this.TILE_SCALE);
 
     const playerSprite = this.physics.add.sprite(0, 0, 'player').setScale(1.5);
-    const playerName = this.add.text(0, -10, 'Player 1', {
-      color: 'white',
-      fontSize: '18px',
-      fontStyle: 'bold',
-    });
 
-    const container = this.add.container(0, 0, [playerSprite, playerName]);
-    this.cameras.main.startFollow(container, true);
     this.cameras.main.setFollowOffset(
       -playerSprite.width,
       -playerSprite.height
@@ -83,13 +76,12 @@ export class Office extends Phaser.Scene {
 
     const gridEngineConfig: GridEngineConfig = {
       characters: [
-        // {
-        //   id: 'player',
-        //   sprite: playerSprite,
-        //   container: container,
-        //   walkingAnimationMapping: 6,
-        //   startPosition: { x: 14, y: 10 },
-        // },
+        {
+          id: 'placeholder',
+          sprite: playerSprite,
+          walkingAnimationMapping: 6,
+          startPosition: { x: 14, y: 10 },
+        },
       ],
     };
 
@@ -103,12 +95,14 @@ export class Office extends Phaser.Scene {
       });
     });
 
-    const logo = this.physics.add.image(200, 200, 'logo').setScale(2);
-    //Player collision to logo
-    this.physics.add.collider(playerSprite, logo, () => {
-      console.log('Collided with logo');
-      logo.destroy();
-    });
+    playerSprite.setAlpha(0);
+
+    // const logo = this.physics.add.image(200, 200, 'logo').setScale(2);
+    // //Player collision to logo
+    // this.physics.add.collider(playerSprite, logo, () => {
+    //   console.log('Collided with logo');
+    //   logo.destroy();
+    // });
   }
 
   update() {
@@ -156,12 +150,12 @@ export class Office extends Phaser.Scene {
   }
 
   addOtherPlayer(playerInfo: Player) {
-    const { x, y, id } = playerInfo;
+    const { x, y, id, name, selectedChar} = playerInfo;
     const otherPlayerSprite = this.add
       .sprite(x, y, 'player')
       .setName(id)
       .setScale(1.5);
-    const otherPlayerName = this.add.text(0, -10, id, {
+    const otherPlayerName = this.add.text(0, -10, name, {
       color: 'white',
       fontSize: '18px',
       fontStyle: 'bold',
@@ -174,7 +168,7 @@ export class Office extends Phaser.Scene {
       id,
       sprite: otherPlayerSprite,
       startPosition: { x, y },
-      walkingAnimationMapping: 4,
+      walkingAnimationMapping: selectedChar,
       container,
     });
     this.gridEngine.setSpeed(id, 10);

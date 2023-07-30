@@ -19,7 +19,7 @@ export const MODAL_TYPES = {
 
 function App() {
   const parentEl = useRef<HTMLDivElement>(null);
-  const { joinOrCreate, availableRooms, setName, name, room } = useRoom();
+  const { joinOrCreate, availableRooms, room } = useRoom();
   const { game } = useGame(parentEl, gameConfig, room);
   const [currentModal, setCurrentModal] = useState(MODAL_TYPES.MAIN);
 
@@ -30,7 +30,6 @@ function App() {
   return (
     <div className='App'>
       {currentModal === MODAL_TYPES.MAIN && (
-        // <MainModal onSwitch={closeModalAndShow} />
         <MainModal
           onSwitch={() => {
             joinOrCreate();
@@ -51,14 +50,6 @@ function App() {
           onReturn={closeModalAndShow}
         />
       )}
-
-      <button
-        onClick={() => {
-          room?.send('join-game');
-        }}
-      >
-        Join
-      </button>
       <div ref={parentEl} className='gameContainer' />
     </div>
   );

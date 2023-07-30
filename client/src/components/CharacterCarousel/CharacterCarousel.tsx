@@ -1,5 +1,6 @@
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { charsImgArray } from '../../utils/contants';
+import { type } from '@colyseus/schema';
 
 type CharacterCarouselProps = {
   activeChar: number;
@@ -15,6 +16,7 @@ function CharacterCarousel({
       <button
         onClick={() => setActiveChar((prev) => prev - 1)}
         disabled={activeChar === 0}
+        type='button'
       >
         <FaArrowLeft size={45} color='#fff' className='cursor-pointer' />
       </button>
@@ -39,6 +41,7 @@ function CharacterCarousel({
       <button
         onClick={() => setActiveChar((prev) => prev + 1)}
         disabled={activeChar === charsImgArray.length - 1}
+        type='button'
       >
         <FaArrowRight size={45} color='#fff' className='cursor-pointer' />
       </button>

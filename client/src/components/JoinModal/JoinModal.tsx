@@ -20,7 +20,7 @@ function JoinModal({ onJoin, onReturn }: JoinModalProps) {
   }
 
   return (
-    <div className='py-12 px-6 w-full min-w-[300px] max-w-[400px] flex flex-col justify-center items-center gap-4 bg-[#110c27] absolute-center'>
+    <div className='py-12 px-6 rounded w-full min-w-[300px] max-w-[400px] flex flex-col justify-center items-center gap-4 bg-[#110c27] absolute-center'>
       <h1 className='text-3xl font-bold text-center text-slate-50'>
         Pick your Avatar
       </h1>
