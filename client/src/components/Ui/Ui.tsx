@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRoomContext } from '../../store/RoomProvider';
 import MainModal from '../SelectionScreen/MainModal/MainModal';
 import JoinModal from '../JoinModal/JoinModal';
