@@ -29,8 +29,7 @@ export class Boot extends Phaser.Scene {
       this.game.events.emit('complete');
     });
 
-    this.load.on('fileprogress', (file: any) => {
-      console.log(file)
+    this.load.on('fileprogress', () => {
     })
 
     this.load.on('progress', (value: number) => {

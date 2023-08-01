@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useRoomContext } from '../../store/RoomProvider';
-import MainModal from '../SelectionScreen/MainModal/MainModal';
 import JoinModal from '../JoinModal/JoinModal';
 import { MODAL_TYPES } from '../../App';
+import MainModal from '../MainModal/MainModal';
 
 function Ui({ game }: { game: Phaser.Game | null }) {
   const [currentModal, setCurrentModal] = useState(MODAL_TYPES.MAIN);

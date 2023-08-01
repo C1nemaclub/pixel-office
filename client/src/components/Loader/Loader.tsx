@@ -7,7 +7,7 @@ type LoaderProps = {
 function Loader({ text = 'Loading...', centered = false }: LoaderProps) {
   return (
     <div className={`loader-container  ${centered ? 'absolute-center' : ''}`}>
-      <span className={`text-[#fff]`}>{text}</span>
+      <span className={`text-[#fff] text-center`}>{text}</span>
       <div className='loader'>
         <div className='inner_loader'></div>
       </div>

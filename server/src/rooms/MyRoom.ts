@@ -13,6 +13,14 @@ export class MyRoom extends Room<MyRoomState> {
   maxClients = 4;
 
   onCreate(options: any) {
+    console.log('MyRoom created!', options)
+    
+    if(options && options.password){
+      // this.setPrivate(true)
+      this.setMetadata({password: true , ...options})
+      //Name the room
+    }
+    
     this.setState(new MyRoomState());
 
     this.onMessage('type', (client, message) => {
@@ -23,6 +31,17 @@ export class MyRoom extends Room<MyRoomState> {
   }
 
   onJoin(client: Client, options: any) {
+    if(!options.password){
+      client.leave()
+      return
+    }
+    if(options && options.password && this.metadata.password){
+      if(options.password !== this.metadata.password){
+        client.send('wrong-password')
+        client.leave()
+        return
+      }
+    }
     console.log(client.sessionId, 'joined!' , options);
 
 

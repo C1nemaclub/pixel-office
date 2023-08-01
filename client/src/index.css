@@ -38,7 +38,15 @@ html {
   @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
 }
 
-h1,h2,h3,h4,h5,h6, button,span, p{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+span,
+p {
   font-family: 'Raleway', sans-serif;
 }
 

@@ -2,9 +2,9 @@ import { gameConfig } from './game';
 import { useRef, useState } from 'react';
 import { useGame } from './hooks';
 import useRoom from './hooks/useRoom';
-import MainModal from './components/SelectionScreen/MainModal/MainModal';
 import JoinModal from './components/JoinModal/JoinModal';
 import Loader from './components/Loader/Loader';
+import MainModal from './components/MainModal/MainModal';
 
 export const MODAL_TYPES = {
   MAIN: 'MAIN',
@@ -22,7 +22,7 @@ function App() {
   const closeModalAndShow = (modalType: string) => {
     setCurrentModal(modalType);
   };
-  
+
   return (
     <div className='App'>
       {gameLoading ? (

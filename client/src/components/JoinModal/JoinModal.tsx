@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CharacterCarousel from '../CharacterCarousel/CharacterCarousel';
+import Button from '../Button/Button';
 
 
 type JoinModalProps = {
@@ -24,7 +25,7 @@ function JoinModal({ onJoin }: JoinModalProps) {
       <form onSubmit={formSubmit} className="flex flex-col gap-4">
         <CharacterCarousel activeChar={activeChar} setActiveChar={setActiveChar} />
         <input className="custom-input w-full outline-none" placeholder='Name' value={name} onChange={(e)=>setName(e.target.value)}/>
-        <button className='btn w-full' type="submit">Join Office</button>
+        <Button type="submit" className="w-full">Join Office</Button>
       </form>
     </div>
   );

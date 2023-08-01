@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "host": "vite --host"
   },
   "dependencies": {
     "@types/simple-peer": "^9.11.5",
+    "class-variance-authority": "^0.7.0",
     "colyseus.js": "^0.15.10",
     "grid-engine": "^2.32.0",
     "jotai": "^2.2.2",
