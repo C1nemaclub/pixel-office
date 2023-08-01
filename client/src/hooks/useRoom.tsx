@@ -3,13 +3,12 @@ import { client } from '../colyseus';
 import { Room, RoomAvailable } from 'colyseus.js';
 import { Game } from 'phaser';
 import { Background } from '../game/scenes';
-import { ConnectionError } from '../utils/errorHandler';
 
 function useRoom() {
   const [room, setRoom] = useState<Room | null>(null);
   const [availableRooms, setAvailableRooms] = useState<RoomAvailable[]>([]);
   const [connectionLoading, setConnectionLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [_,setError] = useState<string | null>(null);
 
   const joinOrCreate = (game: Game | null, callback: Function) => {
     setConnectionLoading(true);
