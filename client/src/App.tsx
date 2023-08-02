@@ -5,6 +5,7 @@ import useRoom from './hooks/useRoom';
 import JoinModal from './components/JoinModal/JoinModal';
 import Loader from './components/Loader/Loader';
 import MainModal from './components/MainModal/MainModal';
+import Chat from './components/Chat/Chat';
 
 export const MODAL_TYPES = {
   MAIN: 'MAIN',
@@ -51,6 +52,7 @@ function App() {
           )}
         </>
       )}
+      <Chat />
       <div ref={parentEl} className='gameContainer' />
     </div>
   );

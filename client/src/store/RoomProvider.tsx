@@ -5,7 +5,7 @@ import { Game } from 'phaser';
 import { Background } from '../game/scenes';
 
 type RoomContextType = {
-  joinOrCreate: (game: Game | null,callback: Function) => void;
+  joinOrCreate: (game: Game | null, callback: Function) => void;
   room: Room | null;
   availableRooms: RoomAvailable[];
   connectionLoading: boolean;
@@ -22,14 +22,14 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
   const [availableRooms] = useState<RoomAvailable[]>([]);
   const [connectionLoading, setConnectionLoading] = useState<boolean>(false);
 
-  const joinOrCreate = (game: Game | null,callback?: Function) => {
+  const joinOrCreate = (game: Game | null, callback?: Function) => {
     setConnectionLoading(true);
-    client.joinOrCreate('my_room').then((room) => {
+    client.joinOrCreate('public').then((room) => {
       setRoom(room);
       const backgroundScene = game?.scene.keys.background as Background;
-      backgroundScene.launchOffice()
+      backgroundScene.launchOffice();
       setConnectionLoading(false);
-      if(callback) callback();
+      if (callback) callback();
     });
   };
 

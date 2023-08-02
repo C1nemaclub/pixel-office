@@ -3,26 +3,36 @@ import { client } from '../colyseus';
 import { Room, RoomAvailable } from 'colyseus.js';
 import { Game } from 'phaser';
 import { Background } from '../game/scenes';
+import { atom, useAtom } from 'jotai';
+
+type RoomContextType = {
+  joinOrCreate: (game: Game | null, callback: Function) => void;
+  room: Room | null;
+  availableRooms: RoomAvailable[];
+  connectionLoading: boolean;
+  error: string | null;
+};
+
+export const roomAtom = atom<Room | null>(null);
 
 function useRoom() {
   const [room, setRoom] = useState<Room | null>(null);
   const [availableRooms, setAvailableRooms] = useState<RoomAvailable[]>([]);
   const [connectionLoading, setConnectionLoading] = useState<boolean>(false);
-  const [_,setError] = useState<string | null>(null);
+  const [_, setError] = useState<string | null>(null);
+  const [__, setRoomAtom] = useAtom(roomAtom);
 
   const joinOrCreate = (game: Game | null, callback: Function) => {
     setConnectionLoading(true);
     client
-      .joinOrCreate('my_room', {
-        label: 'Office',
-        password: 'secret',
-      })
+      .joinOrCreate('public')
       .then((room) => {
         setRoom(room);
         const backgroundScene = game?.scene.keys.background as Background;
         backgroundScene.launchOffice();
         setConnectionLoading(false);
         callback();
+        setRoomAtom(room);
       })
       .catch((e: unknown) => {
         if (e instanceof Error) {

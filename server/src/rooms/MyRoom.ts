@@ -15,11 +15,11 @@ export class MyRoom extends Room<MyRoomState> {
   onCreate(options: any) {
     console.log('MyRoom created!', options)
     
-    if(options && options.password){
-      // this.setPrivate(true)
-      this.setMetadata({password: true , ...options})
-      //Name the room
-    }
+    // if(options && options.password){
+    //   // this.setPrivate(true)
+    //   this.setMetadata({password: true , ...options})
+    //   //Name the room
+    // }
     
     this.setState(new MyRoomState());
 
@@ -31,18 +31,19 @@ export class MyRoom extends Room<MyRoomState> {
   }
 
   onJoin(client: Client, options: any) {
-    if(!options.password){
-      client.leave()
-      return
-    }
-    if(options && options.password && this.metadata.password){
-      if(options.password !== this.metadata.password){
-        client.send('wrong-password')
-        client.leave()
-        return
-      }
-    }
+    // if(!options.password){
+    //   client.leave()
+    //   return
+    // }
+    // if(options && options.password && this.metadata.password){
+    //   if(options.password !== this.metadata.password){
+    //     client.send('wrong-password')
+    //     client.leave()
+    //     return
+    //   }
+    // }
     console.log(client.sessionId, 'joined!' , options);
+    client.send('welcome', "Welcome to the room!")
 
 
     this.onMessage('join-game', (client, playerData: {selectedChar: number, name: string}) => {
