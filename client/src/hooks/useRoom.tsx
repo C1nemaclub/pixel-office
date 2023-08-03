@@ -5,15 +5,8 @@ import { Game } from 'phaser';
 import { Background } from '../game/scenes';
 import { atom, useAtom } from 'jotai';
 
-type RoomContextType = {
-  joinOrCreate: (game: Game | null, callback: Function) => void;
-  room: Room | null;
-  availableRooms: RoomAvailable[];
-  connectionLoading: boolean;
-  error: string | null;
-};
-
 export const roomAtom = atom<Room | null>(null);
+
 
 function useRoom() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -22,6 +15,8 @@ function useRoom() {
   const [_, setError] = useState<string | null>(null);
   const [__, setRoomAtom] = useAtom(roomAtom);
 
+
+
   const joinOrCreate = (game: Game | null, callback: Function) => {
     setConnectionLoading(true);
     client
@@ -29,7 +24,8 @@ function useRoom() {
       .then((room) => {
         setRoom(room);
         const backgroundScene = game?.scene.keys.background as Background;
-        backgroundScene.launchOffice();
+        backgroundScene.launchOffice(room);
+        backgroundScene.setRoomAtom(room);
         setConnectionLoading(false);
         callback();
         setRoomAtom(room);

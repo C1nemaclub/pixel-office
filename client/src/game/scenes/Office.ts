@@ -2,14 +2,27 @@ import Phaser, { GameObjects } from 'phaser';
 import { GridEngine, GridEngineConfig, Direction } from 'grid-engine';
 import { Player } from '../../models/Player.model';
 import { phaserEvent } from '../../events/EventHandler';
+import { Room } from 'colyseus.js';
 
 export class Office extends Phaser.Scene {
   private gridEngine!: GridEngine;
   private readonly TILE_SCALE = 2;
   private otherPlayersGroup!: Phaser.GameObjects.Group;
+  private realRoom!: Room;
 
   constructor() {
     super('office');
+  }
+
+  init({ room }: { room: Room }) {
+    console.log(room, 'here at the office');
+    room.onMessage('welcome', (message: string) => {
+      console.log(message, 'welcome from phaser xdd');
+    });
+    room.onMessage('player-moved', (movementData: any) => {
+      console.log(movementData, 'Phaser Ofice');
+    });
+    this.realRoom = room;
   }
 
   create() {
@@ -17,7 +30,21 @@ export class Office extends Phaser.Scene {
       console.log(lmao, 'handelre vent');
     });
 
-    this.game.events.on('new-player', (player: Player) => {
+    this.realRoom.onMessage('player-moved', (movementData: any) => {
+      console.log('Final TEST');
+    });
+
+    this.realRoom.onMessage('current-players', (data: any) => {
+      console.log('Final TEST players' , data);
+    });
+
+
+  
+    // this.game.events.on('new-player', (player: Player) => {
+    //   this.addOtherPlayer(player);
+    // });
+
+    this.realRoom.onMessage('new-player', (player: Player) => {
       this.addOtherPlayer(player);
     });
 
@@ -35,8 +62,8 @@ export class Office extends Phaser.Scene {
 
     this.game.events.on(
       'current-players',
-      (data: { players: Player[]; clientId: string }) => {  
-        console.log(data, 'current playersaaa L MAO');      
+      (data: { players: Player[]; clientId: string }) => {
+        console.log(data, 'current playersaaa L MAO');
         data.players.forEach((player: Player) => {
           if (player.id === data.clientId) {
             this.addPlayer(player);
@@ -151,7 +178,7 @@ export class Office extends Phaser.Scene {
   }
 
   addOtherPlayer(playerInfo: Player) {
-    const { x, y, id, name, selectedChar} = playerInfo;
+    const { x, y, id, name, selectedChar } = playerInfo;
     const otherPlayerSprite = this.add
       .sprite(x, y, 'player')
       .setName(id)

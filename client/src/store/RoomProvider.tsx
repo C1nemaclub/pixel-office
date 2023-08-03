@@ -27,7 +27,7 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
     client.joinOrCreate('public').then((room) => {
       setRoom(room);
       const backgroundScene = game?.scene.keys.background as Background;
-      backgroundScene.launchOffice();
+      backgroundScene.launchOffice(room);
       setConnectionLoading(false);
       if (callback) callback();
     });

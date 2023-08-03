@@ -1,9 +1,11 @@
+import { Room } from 'colyseus.js';
 import Phaser from 'phaser';
 
 export class Background extends Phaser.Scene {
   private backgroundImage!: Phaser.GameObjects.TileSprite;
   private height!: number;
   private width!: number;
+  private roomAtom!: Room;
   constructor() {
     super('background');
   }
@@ -26,8 +28,17 @@ export class Background extends Phaser.Scene {
     );
     // this.scene.launch('office').bringToTop('office');
   }
-  launchOffice() {
-    this.scene.launch('office').bringToTop('office');
+  launchOffice(room: Room) {
+    this.scene.launch('office', { room }).bringToTop('office');
+  }
+
+  setRoomAtom(room: Room) {
+    this.roomAtom = room;
+    console.log(room, "ATOM")
+    room.onMessage('welcome', (message: string) => {
+      console.log(message, 'welcome from phaser');
+    })
+    
   }
 
   update() {
