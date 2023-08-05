@@ -1,10 +1,13 @@
 export type ChatEvent = {
   message: string;
   id: string;
-  type: "event" | "message";
+  type: 'event';
 };
 
-export type ChatMessage = ChatEvent & {
+export type ChatMessage = {
   name: string;
   time: string;
+  type: 'message';
+  id: string;
+  message: string;
 };

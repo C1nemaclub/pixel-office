@@ -58,14 +58,14 @@ export class MyRoom extends Room<MyRoomState> {
     };
       this.broadcastToAllButMe(client, 'new-player', players[client.sessionId]);
       client.send('current-players', this.getAllPlayers())
-      this.broadcast('chat-event', {id: client.sessionId, message: `${playerData.name} joined the room`})
+      this.broadcast('chat-event', {id: client.sessionId, message: `${playerData.name} joined the room`, type: "event"})
     })
 
     this.onMessage('chat-message', (client, message: string) => {
       console.log("chat message", message)
       const [_, currentTime] = new Date().toLocaleDateString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }).split(",")
       const name = players[client.sessionId].name
-      this.broadcast('chat-message', {id: client.sessionId, message, time: currentTime, name})
+      this.broadcast('chat-message', {id: client.sessionId, message, time: currentTime, name, type: "message"})
     })
 
     this.onMessage('move', (client, movementData) => {      
@@ -80,8 +80,11 @@ export class MyRoom extends Room<MyRoomState> {
 
   onLeave(client: Client, consented: boolean) {
     console.log(client.sessionId, 'left!');
+    const name = players[client.sessionId].name
     delete players[client.sessionId]
+    this.broadcast('chat-event', {id: client.sessionId, message: `${name} left the room`, type: "event"})
     this.broadcast('player-left', client.sessionId)
+
   }
 
   onDispose() {
