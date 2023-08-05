@@ -64,8 +64,8 @@ export class MyRoom extends Room<MyRoomState> {
     this.onMessage('chat-message', (client, message: string) => {
       console.log("chat message", message)
       const [_, currentTime] = new Date().toLocaleDateString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }).split(",")
-      const name = players[client.sessionId].name
-      this.broadcast('chat-message', {id: client.sessionId, message, time: currentTime, name, type: "message"})
+      const {selectedChar, name} = players[client.sessionId]
+      this.broadcast('chat-message', {id: client.sessionId, message, time: currentTime, name, type: "message", selectedChar})
     })
 
     this.onMessage('move', (client, movementData) => {      

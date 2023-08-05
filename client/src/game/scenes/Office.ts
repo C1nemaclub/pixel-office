@@ -15,40 +15,16 @@ export class Office extends Phaser.Scene {
   }
 
   init({ room }: { room: Room }) {
-    console.log(room, 'here at the office');
-    room.onMessage('welcome', (message: string) => {
-      console.log(message, 'welcome from phaser xdd');
-    });
-    room.onMessage('player-moved', (movementData: any) => {
-      console.log(movementData, 'Phaser Ofice');
-    });
     this.realRoom = room;
   }
 
   create() {
-    phaserEvent.on('lmao', (lmao: any) => {
-      console.log(lmao, 'handelre vent');
-    });
-
-    this.realRoom.onMessage('player-moved', (movementData: any) => {
-      console.log('Final TEST');
-    });
-
-    this.realRoom.onMessage('current-players', (data: any) => {
-      console.log('Final TEST players' , data);
-    });
-
-
-  
-    // this.game.events.on('new-player', (player: Player) => {
-    //   this.addOtherPlayer(player);
-    // });
 
     this.realRoom.onMessage('new-player', (player: Player) => {
       this.addOtherPlayer(player);
     });
 
-    this.game.events.on('player-moved', (movementData: any) => {
+    this.realRoom.onMessage('player-moved', (movementData: any) => {
       console.log(movementData, 'Phaser');
       this.gridEngine.moveTo(movementData.id, {
         x: movementData.x,
@@ -56,25 +32,17 @@ export class Office extends Phaser.Scene {
       });
     });
 
-    this.game.events.on('hello', (data: any) => {
-      console.log(data);
+    this.realRoom.onMessage('current-players', (players: Player[]) => {
+      players.forEach((player: Player) => {
+        if (player.id === this.realRoom.sessionId) {
+          this.addPlayer(player);
+        } else {
+          this.addOtherPlayer(player);
+        }
+      });
     });
 
-    this.game.events.on(
-      'current-players',
-      (data: { players: Player[]; clientId: string }) => {
-        console.log(data, 'current playersaaa L MAO');
-        data.players.forEach((player: Player) => {
-          if (player.id === data.clientId) {
-            this.addPlayer(player);
-          } else {
-            this.addOtherPlayer(player);
-          }
-        });
-      }
-    );
-
-    this.game.events.on('player-left', (id: string) => {
+    this.realRoom.onMessage('player-left', (id: string) => {
       this.removePlayer(id);
     });
 

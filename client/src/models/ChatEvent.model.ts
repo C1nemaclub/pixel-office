@@ -10,4 +10,5 @@ export type ChatMessage = {
   type: 'message';
   id: string;
   message: string;
+  selectedChar: number;
 };

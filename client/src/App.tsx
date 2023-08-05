@@ -1,5 +1,5 @@
 import { gameConfig } from './game';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useGame } from './hooks';
 import useRoom from './hooks/useRoom';
 import JoinModal from './components/JoinModal/JoinModal';
@@ -28,6 +28,12 @@ function App() {
       setCurrentModal(MODAL_TYPES.EMPTY);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      room?.leave();
+    };
+  }, []);
 
   return (
     <div className='App'>
