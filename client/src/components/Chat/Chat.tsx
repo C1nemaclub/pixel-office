@@ -2,10 +2,12 @@ import { FC, useEffect } from 'react';
 import { roomAtom } from '../../hooks/useRoom';
 import { useRoomStore } from '../../store/roomStore';
 import { generateRandomColor } from '../../utils/utils';
+import { Input } from 'postcss';
+import Button from '../Button/Button';
 
 interface ButtonProps {}
 
-const messages = [
+const messages: any[] = [
   {
     time: '3:50PM',
     user: 'Evelyn',
@@ -41,10 +43,8 @@ const Chat: FC<ButtonProps> = ({}) => {
   
 
   return (
-    <div className='w-fit max-w-md border border-red-600 h-fit min-h-[160px] p-2 rounded'>
-      <div className=''>
+    <div className='flex flex-col justify-between  w-[400px] bg-[#110c27] min-h-[160px] p-4 rounded fixed bottom-6 left-6'>
         <h2 className="text-slate-50 font-bold">Chat Box</h2>
-        <div>
           {messages.map((message: any) => {
             const color = generateRandomColor();
             return (
@@ -55,8 +55,10 @@ const Chat: FC<ButtonProps> = ({}) => {
               </div>
             );
           })}
-        </div>
-      </div>
+        <form className='flex gap-2 mt-2'>
+          <input className="custom-input w-full outline-none" placeholder='Message' />
+          <Button>Send</Button>
+        </form>
     </div>
   );
 };
