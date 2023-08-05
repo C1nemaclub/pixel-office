@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, FormEvent} from 'react';
 import { useRoomStore } from '../../store/roomStore';
-import { colorArray, generateRandomColor } from '../../utils/utils';
+import { colorArray } from '../../utils/utils';
 import { ChatEvent, ChatMessage } from '../../models/ChatEvent.model';
 import Button from '../Button/Button';
 

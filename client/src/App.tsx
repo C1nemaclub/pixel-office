@@ -1,7 +1,7 @@
 import { gameConfig } from './game';
 import { useRef, useState, useEffect } from 'react';
 import { useGame } from './hooks';
-import useRoom from './hooks/useRoom';
+// import useRoom from './hooks/useRoom';
 import JoinModal from './components/JoinModal/JoinModal';
 import Loader from './components/Loader/Loader';
 import MainModal from './components/MainModal/MainModal';

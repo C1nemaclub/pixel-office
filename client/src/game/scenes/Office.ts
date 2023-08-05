@@ -1,7 +1,6 @@
 import Phaser, { GameObjects } from 'phaser';
 import { GridEngine, GridEngineConfig, Direction } from 'grid-engine';
 import { Player } from '../../models/Player.model';
-import { phaserEvent } from '../../events/EventHandler';
 import { Room } from 'colyseus.js';
 
 export class Office extends Phaser.Scene {
@@ -19,7 +18,6 @@ export class Office extends Phaser.Scene {
   }
 
   create() {
-
     this.realRoom.onMessage('new-player', (player: Player) => {
       this.addOtherPlayer(player);
     });
@@ -85,20 +83,12 @@ export class Office extends Phaser.Scene {
     // this.gridEngine.setSpeed('player', 10);
 
     this.gridEngine.positionChangeStarted().subscribe((data) => {
-      this.game.events.emit('move', {
+      this.realRoom.send('move', {
         x: data.enterTile.x,
         y: data.enterTile.y,
       });
     });
-
     playerSprite.setAlpha(0);
-
-    // const logo = this.physics.add.image(200, 200, 'logo').setScale(2);
-    // //Player collision to logo
-    // this.physics.add.collider(playerSprite, logo, () => {
-    //   console.log('Collided with logo');
-    //   logo.destroy();
-    // });
   }
 
   update() {
