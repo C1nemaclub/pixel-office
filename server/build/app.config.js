@@ -15,7 +15,7 @@ exports.default = (0, tools_1.default)({
         /**
          * Define your room handlers:
          */
-        gameServer.define('my_room', MyRoom_1.MyRoom);
+        gameServer.define('public', MyRoom_1.MyRoom);
     },
     initializeExpress: (app) => {
         /**
