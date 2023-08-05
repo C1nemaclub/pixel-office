@@ -17,13 +17,16 @@ export const MODAL_TYPES = {
 
 function App() {
   const parentEl = useRef<HTMLDivElement>(null);
-  const { joinOrCreate, room, connectionLoading } = useRoom();
-  const { joinOrCreate: newJoin, room: newRoom } = useRoomStore()
-  const { game, gameLoading } = useGame(parentEl, gameConfig, newRoom);
+  // const { joinOrCreate, room, connectionLoading } = useRoom();
+  const { joinOrCreate, room, isLoading } = useRoomStore();
+  const { game, gameLoading } = useGame(parentEl, gameConfig);
   const [currentModal, setCurrentModal] = useState(MODAL_TYPES.MAIN);
 
-  const closeModalAndShow = (modalType: string) => {
-    setCurrentModal(modalType);
+  const handleJoinGame = (selectedChar: number, name: string) => {
+    if (game) {
+      room?.send('join-game', { selectedChar, name });
+      setCurrentModal(MODAL_TYPES.EMPTY);
+    }
   };
 
   return (
@@ -34,26 +37,16 @@ function App() {
         <>
           {currentModal === MODAL_TYPES.MAIN && (
             <MainModal
-              loading={connectionLoading}
+              loading={isLoading}
               onSwitch={() => {
-                // joinOrCreate(game, () => {
-                //   closeModalAndShow(MODAL_TYPES.JOIN);
-                // });
-                newJoin(game, ()=>{
-                  closeModalAndShow(MODAL_TYPES.JOIN);
-                })
+                joinOrCreate(game, () => {
+                  setCurrentModal(MODAL_TYPES.JOIN);
+                });
               }}
             />
           )}
           {currentModal === MODAL_TYPES.JOIN && (
-            <JoinModal
-              onJoin={(selectedChar, name) => {
-                if (game) {
-                  newRoom?.send('join-game', { selectedChar, name });
-                  closeModalAndShow(MODAL_TYPES.EMPTY);
-                }
-              }}
-            />
+            <JoinModal onJoin={handleJoinGame} />
           )}
         </>
       )}

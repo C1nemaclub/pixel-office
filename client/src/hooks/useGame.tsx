@@ -7,9 +7,7 @@ import { useRoomStore } from '../store/roomStore';
 
 export default function useGame(
   parentEl: React.RefObject<HTMLDivElement>,
-  config: Phaser.Types.Core.GameConfig,
-  room: Room | null
-) {
+  config: Phaser.Types.Core.GameConfig) {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const [gameLoading, setGameLoading] = useState<boolean>(true);
   const { room: myRoom } = useRoomStore();
