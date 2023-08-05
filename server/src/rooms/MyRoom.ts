@@ -5,6 +5,8 @@ type Player = {
   id: string;
   x: number,
   y: number,
+  selectedChar: number,
+  name: string
 }
 
 const players: {[key: string]: Player} = {}
@@ -56,19 +58,15 @@ export class MyRoom extends Room<MyRoomState> {
     };
       this.broadcastToAllButMe(client, 'new-player', players[client.sessionId]);
       client.send('current-players', this.getAllPlayers())
+      this.broadcast('chat-event', {id: client.sessionId, message: `${playerData.name} joined the room`})
     })
 
-
-    // players[client.sessionId] = {
-    //   id: client.sessionId,
-    //   x: 14,
-    //   y: 10,
-    // };
-
-    // this.broadcastToAllButMe(client, 'new-player', players[client.sessionId]);
-    // client.send('current-players', this.getAllPlayers())
-
-
+    this.onMessage('chat-message', (client, message: string) => {
+      console.log("chat message", message)
+      const [_, currentTime] = new Date().toLocaleDateString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }).split(",")
+      const name = players[client.sessionId].name
+      this.broadcast('chat-message', {id: client.sessionId, message, time: currentTime, name})
+    })
 
     this.onMessage('move', (client, movementData) => {      
       console.log(movementData, client.sessionId)

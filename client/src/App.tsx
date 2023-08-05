@@ -50,7 +50,7 @@ function App() {
           )}
         </>
       )}
-      <Chat />
+      {room && game && <Chat />}
       <div ref={parentEl} className='gameContainer' />
     </div>
   );
