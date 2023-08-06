@@ -14,7 +14,7 @@ export class Boot extends Phaser.Scene {
     this.load.tilemapTiledJSON('cloudMap', './assets/cloud/cloud_city.json');
     this.load.image('cloud_tileset', './assets/cloud/cloud_tileset.png');
     this.load.image('collision_tiles', './assets/collision-frame.png');
-    this.load.spritesheet('player', './assets/characters.png', {
+    this.load.spritesheet('player', './assets/allchars.png', {
       frameWidth: 52,
       frameHeight: 72,
     });

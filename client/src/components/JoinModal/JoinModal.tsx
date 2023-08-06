@@ -8,7 +8,7 @@ type JoinModalProps = {
 };
 
 function JoinModal({ onJoin }: JoinModalProps) {
-  const [activeChar, setActiveChar] = useState<number>(0) 
+  const [activeChar, setActiveChar] = useState<number>(4) 
   const [name, setName] = useState<string>('')
 
   const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {

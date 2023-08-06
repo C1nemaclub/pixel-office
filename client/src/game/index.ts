@@ -8,6 +8,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   render: {
     antialias: false,
   },
+  pixelArt: false,
   scale: {
     // mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -32,6 +33,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: {
       gravity: { y: 0 },
+      debug: true
     },
   },
   scene: [Boot, Office, Background],

@@ -74,7 +74,7 @@ export class Office extends Phaser.Scene {
           id: 'placeholder',
           sprite: playerSprite,
           walkingAnimationMapping: 6,
-          startPosition: { x: 14, y: 10 },
+          startPosition: { x: 0, y: 0 },
         },
       ],
     };
@@ -82,13 +82,15 @@ export class Office extends Phaser.Scene {
     this.gridEngine.create(tileMap, gridEngineConfig);
     // this.gridEngine.setSpeed('player', 10);
 
-    this.gridEngine.positionChangeStarted().subscribe((data) => {
-      this.realRoom.send('move', {
-        x: data.enterTile.x,
-        y: data.enterTile.y,
-      });
-    });
+    // this.gridEngine.positionChangeStarted().subscribe((data) => {
+    //   this.realRoom.send('move', {
+    //     x: data.enterTile.x,
+    //     y: data.enterTile.y,
+    //   });
+    // });
     playerSprite.setAlpha(0);
+
+    //Path finding strategy
   }
 
   update() {
@@ -104,6 +106,17 @@ export class Office extends Phaser.Scene {
         this.gridEngine.move('player', Direction.DOWN);
       }
     }
+    this.input.keyboard?.clearCaptures();
+
+    //Update player position to server
+    const playerExists = this.gridEngine.hasCharacter('player');
+    if (playerExists) {
+      const playerPosition = this.gridEngine.getPosition('player');
+      this.realRoom.send('move', {
+        x: playerPosition.x,
+        y: playerPosition.y,
+      });
+    }
   }
 
   addPlayer(playerInfo: Player) {
@@ -118,6 +131,12 @@ export class Office extends Phaser.Scene {
       fontStyle: 'bold',
       align: 'center',
     });
+
+    playerSprite.setOrigin(0.5, 1);
+    const offsetX = (playerSprite.width - playerName.width) / 2 + 10;
+    const offsetY = -playerName.height - 5; // Adjust this value as needed to position the name correctly above the character's head
+    playerName.setPosition(playerSprite.x + offsetX, playerSprite.y + offsetY);
+
     const container = this.add.container(0, 0, [playerSprite, playerName]);
     this.cameras.main.startFollow(container, true);
     this.cameras.main.setFollowOffset(
@@ -133,6 +152,7 @@ export class Office extends Phaser.Scene {
       startPosition: { x, y },
     });
     this.gridEngine.setSpeed('player', 10);
+    this.gridEngine.setCollisionGroups('player', []);
   }
 
   addOtherPlayer(playerInfo: Player) {
@@ -147,6 +167,15 @@ export class Office extends Phaser.Scene {
       fontStyle: 'bold',
       align: 'center',
     });
+
+    otherPlayerSprite.setOrigin(0.5, 1);
+    const offsetX = (otherPlayerSprite.width - otherPlayerName.width) / 2 + 10;
+    const offsetY = -otherPlayerName.height - 5; // Adjust this value as needed to position the name correctly above the character's head
+    otherPlayerName.setPosition(
+      otherPlayerSprite.x + offsetX,
+      otherPlayerSprite.y + offsetY
+    );
+
     const container = this.add
       .container(0, 0, [otherPlayerSprite, otherPlayerName])
       .setName(id);
@@ -159,6 +188,8 @@ export class Office extends Phaser.Scene {
     });
     this.gridEngine.setSpeed(id, 10);
     this.otherPlayersGroup.add(container);
+    this.gridEngine.setCollisionGroups(id, []);
+
   }
 
   removePlayer(playerId: string) {
