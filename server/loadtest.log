@@ -1,12 +1,12 @@
-[05/08/2023, 13:57:09] @colyseus/loadtest
+[05/08/2023, 19:14:44] @colyseus/loadtest
 endpoint: ws://localhost:2567
-roomName: my_room
+roomName: public
 numClients: 2
 logLevel: all
 output: C:\Users\santi\OneDrive\Escritorio\pixel-office\server\loadtest.log
-[05/08/2023, 13:57:09] Error: connect ECONNREFUSED ::1:2567
-[05/08/2023, 13:57:09] Error: connect ECONNREFUSED ::1:2567
-[05/08/2023, 13:57:20] Finished. Summary:
+[05/08/2023, 19:14:45] Error: connect ECONNREFUSED ::1:2567
+[05/08/2023, 19:14:45] Error: connect ECONNREFUSED ::1:2567
+[05/08/2023, 19:14:54] Finished. Summary:
     Successful connections: 0
     Failed connections: 2
     Total errors: 2

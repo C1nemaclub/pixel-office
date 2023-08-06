@@ -8,8 +8,9 @@
     "node": ">= 16.13.0"
   },
   "scripts": {
-    "start": "tsx watch src/index.ts",
-    "loadtest": "tsx loadtest/example.ts --room my_room --numClients 2",
+    "devStart": "tsx watch src/index.ts",
+    "start": "node build/index.js",
+    "loadtest": "tsx loadtest/example.ts --room public --numClients 2",
     "build": "npm run clean && tsc",
     "clean": "rimraf build",
     "test": "mocha -r tsx test/**_test.ts --exit --timeout 15000"
