@@ -23,7 +23,7 @@ export class Office extends Phaser.Scene {
     });
 
     this.realRoom.onMessage('player-moved', (movementData: any) => {
-      console.log(movementData, 'Phaser');
+      // console.log(movementData, 'Phaser');
       this.gridEngine.moveTo(movementData.id, {
         x: movementData.x,
         y: movementData.y,

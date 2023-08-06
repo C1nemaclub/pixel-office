@@ -23,7 +23,6 @@ export class Boot extends Phaser.Scene {
 
     // on Complete
     this.load.on('complete', () => {
-      console.log('Loading Complete');
       this.scene.launch('background')
       // this.scene.start('office');
       this.game.events.emit('complete');
@@ -33,7 +32,6 @@ export class Boot extends Phaser.Scene {
     })
 
     this.load.on('progress', (value: number) => {
-      console.log('Progress: ', value);
       this.game.events.emit('progress', value);
       phaserEvent.emit('progress', value);
     });
