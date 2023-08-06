@@ -33,3 +33,14 @@ export const charsImgArray = [
   char15,
   char16,
 ];
+
+export const SOCIALS = [
+  {
+    link: 'https://github.com/C1nemaclub',
+    icon: 'github',
+  },
+  {
+    link: 'https://www.linkedin.com/in/santiago-velasquez-426719243/',
+    icon: 'linkedin',
+  },
+];

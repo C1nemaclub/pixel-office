@@ -1,4 +1,4 @@
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { BiSolidRightArrow, BiSolidLeftArrow } from 'react-icons/bi';
 import { charsImgArray } from '../../utils/contants';
 
 type CharacterCarouselProps = {
@@ -17,11 +17,16 @@ function CharacterCarousel({
         disabled={activeChar === 0}
         type='button'
       >
-        <FaArrowLeft size={45} color='#fff' className='cursor-pointer' />
+        <BiSolidLeftArrow
+          size={45}
+          className={`text-slate-50 cursor-pointer hover:text-indigo-500 ${
+            activeChar === 0 ? 'opacity-0' : ''
+          }`}
+        />
       </button>
       <div className='w-[150px] overflow-hidden select-none'>
         <div
-          className='w-[2400px] flex justify-center align-center transition-all '
+          className='w-[2400px] flex justify-center align-center transition-all duration-300 '
           style={{ transform: `translateX(${activeChar * -150}px)` }}
         >
           {charsImgArray.map((url: string) => {
@@ -42,7 +47,12 @@ function CharacterCarousel({
         disabled={activeChar === charsImgArray.length - 1}
         type='button'
       >
-        <FaArrowRight size={45} color='#fff' className='cursor-pointer' />
+        <BiSolidRightArrow
+          size={45}
+          className={`text-slate-50 cursor-pointer hover:text-indigo-500 ${
+            activeChar === charsImgArray.length - 1 ? 'opacity-0' : ''
+          }`}
+        />
       </button>
     </div>
   );

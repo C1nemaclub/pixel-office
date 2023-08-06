@@ -12,7 +12,7 @@ type Player = {
 const players: {[key: string]: Player} = {}
 
 export class MyRoom extends Room<MyRoomState> {
-  maxClients = 4;
+  maxClients = 12;
 
   onCreate(options: any) {
     console.log('MyRoom created!', options)
@@ -69,7 +69,6 @@ export class MyRoom extends Room<MyRoomState> {
     })
 
     this.onMessage('move', (client, movementData) => {      
-      console.log(movementData, client.sessionId)
       players[client.sessionId] = { ...players[client.sessionId], x: movementData.x, y: movementData.y }
       this.broadcastToAllButMe(client, 'player-moved', {
         id: client.sessionId,

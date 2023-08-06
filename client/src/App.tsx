@@ -7,6 +7,7 @@ import Loader from './components/Loader/Loader';
 import MainModal from './components/MainModal/MainModal';
 import Chat from './components/Chat/Chat';
 import { useRoomStore } from './store/roomStore';
+import Socials from './components/Socials/Socials';
 
 export const MODAL_TYPES = {
   MAIN: 'MAIN',
@@ -57,6 +58,7 @@ function App() {
         </>
       )}
       {room && game && <Chat />}
+      <Socials />
       <div ref={parentEl} className='gameContainer' />
     </div>
   );
