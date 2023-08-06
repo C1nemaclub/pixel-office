@@ -17,6 +17,11 @@ html {
   padding: 0;
   margin: 0;
   background-color: #363636;
+  overflow: hidden;
+}
+
+html{
+  scroll-behavior: smooth;
 }
 
 :root {
@@ -91,4 +96,18 @@ p {
   100% {
     transform: translateX(calc(-100% + 10px));
   }
+}
+
+
+.chat-container::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+.chat-container::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #ccc;        /* color of the tracking area */
+}
+.chat-container::-webkit-scrollbar-thumb {
+  background-color: #3510dd;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #ccc;  /* creates padding around scroll thumb */
 }

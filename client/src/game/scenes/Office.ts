@@ -111,11 +111,14 @@ export class Office extends Phaser.Scene {
     //Update player position to server
     const playerExists = this.gridEngine.hasCharacter('player');
     if (playerExists) {
-      const playerPosition = this.gridEngine.getPosition('player');
-      this.realRoom.send('move', {
-        x: playerPosition.x,
-        y: playerPosition.y,
-      });
+      const isMoving = this.gridEngine.isMoving('player');
+      if (isMoving) {
+        const playerPosition = this.gridEngine.getPosition('player');
+        this.realRoom.send('move', {
+          x: playerPosition.x,
+          y: playerPosition.y,
+        });
+      }
     }
   }
 
@@ -126,11 +129,12 @@ export class Office extends Phaser.Scene {
       .setName(id)
       .setScale(1.5);
     const playerName = this.add.text(0, -10, name, {
-      color: 'white',
+      color: '#00f7ff',
       fontSize: '18px',
-      fontStyle: 'bold',
       align: 'center',
-    });
+      fontFamily: 'Helvetica',
+      backgroundColor: "#363636",
+    }).setPadding(5, 2.4, 5, 2.5);
 
     playerSprite.setOrigin(0.5, 1);
     const offsetX = (playerSprite.width - playerName.width) / 2 + 10;
@@ -164,9 +168,10 @@ export class Office extends Phaser.Scene {
     const otherPlayerName = this.add.text(0, -10, name, {
       color: 'white',
       fontSize: '18px',
-      fontStyle: 'bold',
       align: 'center',
-    });
+      fontFamily: 'Helvetica',
+      backgroundColor: "#363636"
+    }).setPadding(5, 2.4, 5, 2.5);
 
     otherPlayerSprite.setOrigin(0.5, 1);
     const offsetX = (otherPlayerSprite.width - otherPlayerName.width) / 2 + 10;
@@ -189,7 +194,6 @@ export class Office extends Phaser.Scene {
     this.gridEngine.setSpeed(id, 10);
     this.otherPlayersGroup.add(container);
     this.gridEngine.setCollisionGroups(id, []);
-
   }
 
   removePlayer(playerId: string) {

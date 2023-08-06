@@ -21,7 +21,7 @@ function CharacterCarousel({
       </button>
       <div className='w-[150px] overflow-hidden select-none'>
         <div
-          className='w-[1200px] flex justify-center align-center transition-all '
+          className='w-[2400px] flex justify-center align-center transition-all '
           style={{ transform: `translateX(${activeChar * -150}px)` }}
         >
           {charsImgArray.map((url: string) => {

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, FormEvent} from 'react';
+import { FC, useEffect, useState, FormEvent, useRef} from 'react';
 import { useRoomStore } from '../../store/roomStore';
 import { colorArray } from '../../utils/utils';
 import { ChatEvent, ChatMessage } from '../../models/ChatEvent.model';
@@ -13,6 +13,7 @@ const Chat: FC<ButtonProps> = ({}) => {
   const { room } = useRoomStore();
   const [message, setMessage] = useState<string>('')
   const [chatHistory, setChatHistory] = useState<EventOrMessage[]>([])
+  const chatRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (room) {
@@ -34,14 +35,16 @@ const Chat: FC<ButtonProps> = ({}) => {
     }
   }
 
+    useEffect(() => {
+      chatRef.current?.scrollTo(0, chatRef.current.scrollHeight)
+    }, [chatHistory])
+
 
   return (
     <div className='flex flex-col justify-between  w-[450px] bg-[#110c27]  min-h-[160px] p-4 rounded fixed bottom-6 left-6'>
         <h2 className="text-slate-50 font-bold">Chat Box</h2>
-
-        <div className="max-h-[300px] overflow-auto">
+        <div className="max-h-[220px] overflow-auto chat-container" ref={chatRef} >
         {chatHistory.map((event: EventOrMessage)=>{
-          
           if(event.type === "message"){
             const color = colorArray[event.selectedChar]
             return (
