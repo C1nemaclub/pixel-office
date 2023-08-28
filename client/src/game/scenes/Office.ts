@@ -31,6 +31,8 @@ export class Office extends Phaser.Scene {
     });
 
     this.realRoom.onMessage('current-players', (players: Player[]) => {
+      console.log("Current!", players)
+      
       players.forEach((player: Player) => {
         if (player.id === this.realRoom.sessionId) {
           this.addPlayer(player);

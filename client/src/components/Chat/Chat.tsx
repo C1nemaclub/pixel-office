@@ -57,20 +57,20 @@ const Chat: FC<ButtonProps> = ({}) => {
                 const color = colorArray[event.selectedChar];
                 return (
                   <div
-                    className='flex gap-2 justify-start items-start'
+                    className='flex gap-2 justify-start items-start flex-wrap'
                     key={event.id}
                   >
                     <p className='text-slate-300'>[{event.time}]</p>
                     <p style={{ color }} className=''>
                       {event.name}
                     </p>
-                    <p className='text-slate-300'>: {event.message}</p>
+                    <p className='text-slate-300 flex-1'>: {event.message}</p>
                   </div>
                 );
               } else if (event.type === 'event') {
                 return (
                   <div
-                    className='flex gap-2 justify-start items-start'
+                    className='flex gap-2 justify-start items-start flex-wrap'
                     key={event.id}
                   >
                     <p className='text-slate-500'>Server: {event.message}</p>

@@ -35,3 +35,18 @@ export const useRoomStore = create<RoomStoreType>((set) => {
     },
   };
 });
+
+
+// const useStore = create((set) => ({
+//   count: 0,
+//   dispatch: (action: any) => set((state: any) => reducer(state, action)),
+// }));
+
+// const reducer = (state: any, action: any) => {
+//   switch (action.type) {
+//     case 'START_LOADING':
+//       return { ...state, loading: true };
+//     default:
+//       return state;
+//   }
+// };
