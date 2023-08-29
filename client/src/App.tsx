@@ -12,6 +12,8 @@ import { CallManager } from './calls/CallManager';
 import { Player } from './models/Player.model';
 import useStream from './hooks/useStream';
 import useCallManager from './hooks/useCallManager';
+import Button from './components/Button/Button';
+import { useDeviceStore } from './store/deviceStore';
 
 export const MODAL_TYPES = {
   MAIN: 'MAIN',
@@ -23,12 +25,13 @@ export const MODAL_TYPES = {
 function App() {
   const parentEl = useRef<HTMLDivElement>(null);
   // const { joinOrCreate, room, connectionLoading } = useRoom();
-  const { joinOrCreate, room, isLoading } = useRoomStore();
+  const { joinOrCreate, room, isLoading} = useRoomStore();
   const { game, gameLoading } = useGame(parentEl, gameConfig);
   const [currentModal, setCurrentModal] = useState(MODAL_TYPES.MAIN);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { stream, handleUserMedia, audioDevices, changeAudioSource } = useStream(videoRef);
-  useCallManager(stream);
+  const { handleUserMedia, changeMediaSource, toggleCamera } = useStream(videoRef);
+  const { isVideoActive } = useDeviceStore((state) => state)
+  // useCallManager(stream);
 
   const handleJoinGame = (selectedChar: number, name: string) => {
     if (game) {
@@ -45,7 +48,11 @@ function App() {
 
   return (
     <div className='App'>
-      <video autoPlay ref={videoRef} playsInline />
+      <div className='max-w-[300px] w-full fixed right-5 top-5 rounded overflow-hidden'> 
+        <video autoPlay ref={videoRef} playsInline />
+        <Button onClick={toggleCamera}>Disable Camera</Button>
+        <span className='text-2xl'>{isVideoActive ? "🟢" : "🔴"}</span>
+      </div>
       {gameLoading ? (
         <Loader text='Loading Game Assets...' centered />
       ) : (
@@ -61,7 +68,7 @@ function App() {
               }}
             />
           )}
-          {currentModal === MODAL_TYPES.JOIN && <JoinModal onJoin={handleJoinGame} audioDevices={audioDevices} changeAudioSource={changeAudioSource} />}
+          {currentModal === MODAL_TYPES.JOIN && <JoinModal onJoin={handleJoinGame} changeMediaSource={changeMediaSource} />}
         </>
       )}
       {room && game && <Chat />}

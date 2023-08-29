@@ -1,42 +1,55 @@
-import { useEffect, useState } from 'react';
+import { useDeviceStore } from '../store/deviceStore';
 
 const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
-  const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
-  useEffect(() => {
-    console.log(stream?.getAudioTracks(), 'TRacks');
-  }, [stream]);
+  const { dispatch, stream } = useDeviceStore((state) => state);
 
   const handleUserMedia = () => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then(async (media) => {
-        handleStream(media)
-
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        setAudioDevices(devices.filter((device) => device.kind === 'audioinput'));
-        setVideoDevices(devices.filter((device) => device.kind === 'videoinput'));
+        handleStream(media);
+        handleDevices();
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const changeAudioSource = async (deviceId: string) => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: { deviceId } }).then(handleStream);
+  const handleDevices = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const audioDevices = devices.filter((device) => device.kind === 'audioinput');
+    const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+    dispatch({ type: 'SET_AUDIO_DEVICE', payload: audioDevices });
+    dispatch({ type: 'SET_VIDEO_DEVICE', payload: videoDevices });
   };
 
-  const changeVideoSource = async (deviceId: string) => {
-    navigator.mediaDevices.getUserMedia({ video: { deviceId }, audio: true }).then(handleStream);
+  const changeMediaSource = async (deviceId: string, deviceType: string) => {
+    if (deviceType === 'audio') {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: { deviceId } }).then(handleStream);
+    } else if (deviceType === 'video') {
+      navigator.mediaDevices.getUserMedia({ video: { deviceId }, audio: true }).then(handleStream);
+    }
   };
 
-  const handleStream = (stream: MediaStream) => {
-    setStream(stream)
-    videoRef.current!.srcObject = stream
+  const toggleCamera = () => {
+    const isLive = stream?.getVideoTracks()[0].readyState === "live";
+    
+    if(isLive){
+      stream?.getVideoTracks().forEach(track => {
+        if(track.readyState === "live") track.stop()
+      })
+      dispatch({type: "SET_VIDEO_STATE", payload: "stop"})
+    } else{
+      handleUserMedia()
+    }
   }
 
-  return { stream, handleUserMedia, audioDevices, videoDevices, changeAudioSource, changeVideoSource };
+  const handleStream = (stream: MediaStream) => {
+    videoRef.current!.srcObject = stream;
+    dispatch({ type: 'SET_STREAM', payload: stream });
+  };
+
+  return { handleUserMedia, changeMediaSource, toggleCamera };
 };
 
 export default useStream;
