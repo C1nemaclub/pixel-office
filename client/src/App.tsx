@@ -14,6 +14,9 @@ import useStream from './hooks/useStream';
 import useCallManager from './hooks/useCallManager';
 import Button from './components/Button/Button';
 import { useDeviceStore } from './store/deviceStore';
+import UserMedia from './components/UserMedia/UserMedia';
+import MediaIcon from './components/MediaIcon/MediaIcon';
+import { FaVideoSlash, FaVideo } from 'react-icons/fa';
 
 export const MODAL_TYPES = {
   MAIN: 'MAIN',
@@ -25,12 +28,12 @@ export const MODAL_TYPES = {
 function App() {
   const parentEl = useRef<HTMLDivElement>(null);
   // const { joinOrCreate, room, connectionLoading } = useRoom();
-  const { joinOrCreate, room, isLoading} = useRoomStore();
+  const { joinOrCreate, room, isLoading } = useRoomStore();
   const { game, gameLoading } = useGame(parentEl, gameConfig);
   const [currentModal, setCurrentModal] = useState(MODAL_TYPES.MAIN);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { handleUserMedia, changeMediaSource, toggleCamera } = useStream(videoRef);
-  const { isVideoActive } = useDeviceStore((state) => state)
+  const { isVideoActive, stream } = useDeviceStore((state) => state);
   // useCallManager(stream);
 
   const handleJoinGame = (selectedChar: number, name: string) => {
@@ -48,11 +51,16 @@ function App() {
 
   return (
     <div className='App'>
-      <div className='max-w-[300px] w-full fixed right-5 top-5 rounded overflow-hidden'> 
+      {/* <div className='max-w-[300px] w-full fixed right-5 top-5 rounded overflow-hidden'>
         <video autoPlay ref={videoRef} playsInline />
-        <Button onClick={toggleCamera}>Disable Camera</Button>
-        <span className='text-2xl'>{isVideoActive ? "🟢" : "🔴"}</span>
-      </div>
+        {stream && (
+          <>
+            <span className='text-2xl'>{isVideoActive ? '🟢' : '🔴'}</span>
+            <Button onClick={toggleCamera}>Disable Camera</Button>
+          </>
+        )}
+      </div> */}
+      <UserMedia stream={stream} isVideoActive={isVideoActive} toggleCamera={toggleCamera} ref={videoRef} />
       {gameLoading ? (
         <Loader text='Loading Game Assets...' centered />
       ) : (

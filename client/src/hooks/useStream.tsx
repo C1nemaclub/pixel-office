@@ -8,14 +8,14 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
       .getUserMedia({ video: true, audio: true })
       .then(async (media) => {
         handleStream(media);
-        handleDevices();
+        listUserDevices();
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleDevices = async () => {
+  const listUserDevices = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const audioDevices = devices.filter((device) => device.kind === 'audioinput');
     const videoDevices = devices.filter((device) => device.kind === 'videoinput');

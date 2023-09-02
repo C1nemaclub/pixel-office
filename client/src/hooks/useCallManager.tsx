@@ -1,10 +1,10 @@
-import { Room } from 'colyseus.js';
 import { useRoomStore } from '../store/roomStore';
+import { useDeviceStore } from '../store/deviceStore';
 
-interface useCallManagerProps {}
 
-const useCallManager = (stream: MediaStream | null) => {
+const useCallManager = () => {
   const { room } = useRoomStore();
+  const { stream } = useDeviceStore();
   return {};
 };
 
