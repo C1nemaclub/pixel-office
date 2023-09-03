@@ -33,7 +33,7 @@ function App() {
   const [currentModal, setCurrentModal] = useState(MODAL_TYPES.MAIN);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { handleUserMedia, changeMediaSource, toggleCamera } = useStream(videoRef);
-  const { isVideoActive, stream } = useDeviceStore((state) => state);
+  // const { isVideoActive, stream } = useDeviceStore((state) => state);
   // useCallManager(stream);
 
   const handleJoinGame = (selectedChar: number, name: string) => {
@@ -51,16 +51,7 @@ function App() {
 
   return (
     <div className='App'>
-      {/* <div className='max-w-[300px] w-full fixed right-5 top-5 rounded overflow-hidden'>
-        <video autoPlay ref={videoRef} playsInline />
-        {stream && (
-          <>
-            <span className='text-2xl'>{isVideoActive ? '🟢' : '🔴'}</span>
-            <Button onClick={toggleCamera}>Disable Camera</Button>
-          </>
-        )}
-      </div> */}
-      <UserMedia stream={stream} isVideoActive={isVideoActive} toggleCamera={toggleCamera} ref={videoRef} />
+      <UserMedia toggleCamera={toggleCamera} ref={videoRef} />
       {gameLoading ? (
         <Loader text='Loading Game Assets...' centered />
       ) : (

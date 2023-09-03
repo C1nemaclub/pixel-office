@@ -36,7 +36,7 @@ export const charsImgArray = [
 
 export const SOCIALS = [
   {
-    link: 'https://github.com/C1nemaclub',
+    link: 'https://github.com/C1nemaclub/pixel-office',
     icon: 'github',
   },
   {

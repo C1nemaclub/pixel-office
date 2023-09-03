@@ -1,7 +1,7 @@
 import { useDeviceStore } from '../store/deviceStore';
 
 const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
-  const { dispatch, stream } = useDeviceStore((state) => state);
+  const { dispatch, stream, isAudioActive, isVideoActive } = useDeviceStore((state) => state);
 
   const handleUserMedia = () => {
     navigator.mediaDevices
@@ -31,22 +31,62 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
     }
   };
 
-  const toggleCamera = () => {
-    const isLive = stream?.getVideoTracks()[0].readyState === "live";
-    
-    if(isLive){
-      stream?.getVideoTracks().forEach(track => {
-        if(track.readyState === "live") track.stop()
-      })
-      dispatch({type: "SET_VIDEO_STATE", payload: "stop"})
-    } else{
-      handleUserMedia()
+  const toggleCamera = (deviceName: string) => {
+    if (deviceName === 'video') {
+      const isLive = stream?.getVideoTracks()[0].enabled;
+
+      if (isLive) {
+        stream?.getVideoTracks().forEach((track) => {
+          track.enabled = false;
+        });
+        dispatch({ type: 'SET_VIDEO_STATE', payload: 'stop' });
+      } else {
+        stream?.getVideoTracks().forEach((track) => {
+          track.enabled = true;
+        });
+        dispatch({ type: 'SET_VIDEO_STATE', payload: 'live' });
+      }
+    } else {
+      const isLive = stream?.getAudioTracks()[0].enabled;
+
+      if (isLive) {
+        stream?.getAudioTracks().forEach((track) => {
+          track.enabled = false;
+        });
+        dispatch({ type: 'SET_AUDIO_STATE', payload: 'stop' });
+      } else {
+        stream?.getAudioTracks().forEach((track) => {
+          track.enabled = true;
+        });
+        dispatch({ type: 'SET_AUDIO_STATE', payload: 'live' });
+      }
     }
-  }
+  };
 
   const handleStream = (stream: MediaStream) => {
     videoRef.current!.srcObject = stream;
     dispatch({ type: 'SET_STREAM', payload: stream });
+
+    //handle audio and video tracks
+    // stream.getTracks().forEach((track) => {
+    //   if (track.kind === 'audio') {
+    //     if (isAudioActive) {
+    //       track.enabled = true;
+    //       dispatch({ type: 'SET_AUDIO_STATE', payload: 'live' });
+    //     } else {
+    //       track.enabled = false;
+    //       dispatch({ type: 'SET_AUDIO_STATE', payload: 'stop' });
+    //     }
+    //   } else if (track.kind === 'video') {
+    //     if (isVideoActive) {
+    //       track.enabled = true;
+    //       dispatch({ type: 'SET_VIDEO_STATE', payload: 'live' });
+    //     } else {
+    //       track.enabled = false;
+    //       dispatch({ type: 'SET_VIDEO_STATE', payload: 'stop' });
+    //     }
+    //   }
+    // });
   };
 
   return { handleUserMedia, changeMediaSource, toggleCamera };
