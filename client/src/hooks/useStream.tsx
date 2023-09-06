@@ -1,4 +1,5 @@
 import { useDeviceStore } from '../store/deviceStore';
+import { useEffect } from 'react';
 
 const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
   const { dispatch, stream, isAudioActive, isVideoActive } = useDeviceStore((state) => state);
@@ -6,7 +7,7 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
   const handleUserMedia = () => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
-      .then(async (media) => {
+      .then((media) => {
         handleStream(media);
         listUserDevices();
       })
@@ -23,7 +24,7 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
     dispatch({ type: 'SET_VIDEO_DEVICE', payload: videoDevices });
   };
 
-  const changeMediaSource = async (deviceId: string, deviceType: string) => {
+  const changeMediaSource = (deviceId: string, deviceType: string) => {
     if (deviceType === 'audio') {
       navigator.mediaDevices.getUserMedia({ video: true, audio: { deviceId } }).then(handleStream);
     } else if (deviceType === 'video') {
@@ -66,28 +67,19 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
   const handleStream = (stream: MediaStream) => {
     videoRef.current!.srcObject = stream;
     dispatch({ type: 'SET_STREAM', payload: stream });
-
-    //handle audio and video tracks
-    // stream.getTracks().forEach((track) => {
-    //   if (track.kind === 'audio') {
-    //     if (isAudioActive) {
-    //       track.enabled = true;
-    //       dispatch({ type: 'SET_AUDIO_STATE', payload: 'live' });
-    //     } else {
-    //       track.enabled = false;
-    //       dispatch({ type: 'SET_AUDIO_STATE', payload: 'stop' });
-    //     }
-    //   } else if (track.kind === 'video') {
-    //     if (isVideoActive) {
-    //       track.enabled = true;
-    //       dispatch({ type: 'SET_VIDEO_STATE', payload: 'live' });
-    //     } else {
-    //       track.enabled = false;
-    //       dispatch({ type: 'SET_VIDEO_STATE', payload: 'stop' });
-    //     }
-    //   }
-    // });
   };
+
+  const deviceChangeHandler = (e: any) => {
+    handleUserMedia();
+  };
+
+  useEffect(() => {
+    navigator.mediaDevices.addEventListener('devicechange', deviceChangeHandler);
+
+    return () => {
+      navigator.mediaDevices.removeEventListener('devicechange', deviceChangeHandler);
+    };
+  }, []);
 
   return { handleUserMedia, changeMediaSource, toggleCamera };
 };

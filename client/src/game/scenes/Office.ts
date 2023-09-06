@@ -63,7 +63,7 @@ export class Office extends Phaser.Scene {
       ?.setScale(this.TILE_SCALE);
     tileMap.createLayer(4, 'collision', 0, 0)?.setScale(this.TILE_SCALE);
 
-    const playerSprite = this.physics.add.sprite(0, 0, 'player').setScale(1.5);
+    const playerSprite = this.physics.add.sprite(0, 0, 'player')
 
     this.cameras.main.setFollowOffset(
       -playerSprite.width,
@@ -134,7 +134,7 @@ export class Office extends Phaser.Scene {
       color: '#00f7ff',
       fontSize: '18px',
       align: 'center',
-      fontFamily: 'Helvetica',
+      fontFamily: 'Candara',
       backgroundColor: "#363636",
     }).setPadding(5, 2.4, 5, 2.5);
 
@@ -148,7 +148,7 @@ export class Office extends Phaser.Scene {
     this.cameras.main.setFollowOffset(
       -playerSprite.width,
       -playerSprite.height
-    );
+    )
 
     this.gridEngine.addCharacter({
       id: 'player',

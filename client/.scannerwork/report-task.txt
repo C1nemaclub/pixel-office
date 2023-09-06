@@ -1,0 +1,6 @@
+projectKey=pixel-office-frontend
+serverUrl=http://localhost:9000
+serverVersion=10.2.0.77647
+dashboardUrl=http://localhost:9000/dashboard?id=pixel-office-frontend
+ceTaskId=AYpikymGzryOTZvg0SGT
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYpikymGzryOTZvg0SGT

@@ -8,6 +8,7 @@ interface UserMediaProps {
 }
 
 const UserMedia = forwardRef<HTMLVideoElement, UserMediaProps>(({ toggleCamera }, ref) => {
+  
   const { stream, isVideoActive, isAudioActive } = useDeviceStore((state) => state);
   return (
     <div className='max-w-[300px] w-full fixed right-5 top-5 rounded overflow-hidden'>
