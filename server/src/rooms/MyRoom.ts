@@ -80,17 +80,11 @@ export class MyRoom extends Room<MyRoomState> {
 
     this.onMessage('call-user', (_, payload) => {
       console.log('Calling user');
-
       this.sendToClient(payload.userToCall, 'user-joined', { signal: payload.signal, callerID: payload.callerID });
     });
 
-    // socket.on('call-user', (payload) => {
-    //   io.to(payload.userToCall).emit('user-joined', { signal: payload.signal, callerID: payload.callerID });
-    // });
-
     this.onMessage('answer-call', (client, payload) => {
       this.sendToClient(payload.callerID, 'call-accepted', { signal: payload.signal, id: client.sessionId });
-      // io.to(payload.callerID).emit('call-accepted', {signal: payload.signal, id: socket.id})
     });
   }
 

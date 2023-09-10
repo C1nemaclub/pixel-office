@@ -2,7 +2,6 @@ import { useRoomStore } from '../store/roomStore';
 import { useDeviceStore } from '../store/deviceStore';
 import Peer, { SignalData } from 'simple-peer';
 import { useState, useEffect, useRef } from 'react';
-import { FaAmericanSignLanguageInterpreting } from 'react-icons/fa';
 import { Player } from '../models/Player.model';
 
 export type TPeer = {
@@ -22,7 +21,6 @@ const useCallManager = () => {
     if (room && stream) {
       setMe(room.sessionId);
       room.onMessage('current-players', (players: Player[]) => {
-        console.log(players);
         const peers: TPeer[] = [];
         players.forEach((player: Player) => {
           if (player.id === room.sessionId) return;
@@ -37,8 +35,6 @@ const useCallManager = () => {
       });
 
       room.onMessage('user-joined', (payload: { signal: SignalData; callerID: string }) => {
-        console.log('User Joined');
-        // alert(`${payload.callerID} just joined the room!`);
         const peer = addPeer(payload.signal, payload.callerID, stream);
         peersRef.current.push({
           peerID: payload.callerID,
@@ -48,14 +44,14 @@ const useCallManager = () => {
       });
 
       room.onMessage('call-accepted', (payload: { signal: SignalData; id: string }) => {
-        alert(`${payload.id} just accepted your call!`);
         const peerToConnect = peersRef.current.find((peer: TPeer) => peer.peerID === payload.id);
 
         peerToConnect?.peer.signal(payload.signal);
       });
 
-      room.onMessage('user-disconnected', (userID: string) => {
-        alert(`${userID} just left the room!`);
+      room.onMessage('player-left', (userID: string) => {
+        console.log('Player left: ' + userID);
+        
         const peerToDisconnect = peersRef.current.find((peer: TPeer) => peer.peerID === userID);
 
         if (peerToDisconnect) peerToDisconnect.peer.destroy();
@@ -76,10 +72,9 @@ const useCallManager = () => {
     });
 
     peer.on('signal', (signal) => {
-      alert('Calling');
       room?.send('call-user', { signal, callerID, userToCall });
     });
-    console.log('Done');
+    console.log('Calling ' + userToCall);
 
     return peer;
   };
@@ -92,8 +87,9 @@ const useCallManager = () => {
       stream,
     });
 
+    console.log('Answering ' + callerID);
+
     peer.on('signal', (signal: SignalData) => {
-      alert('Answering');
       room?.send('answer-call', { signal, callerID });
     });
 

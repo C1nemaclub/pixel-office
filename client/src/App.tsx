@@ -11,12 +11,13 @@ import Socials from './components/Socials/Socials';
 import { CallManager } from './calls/CallManager';
 import { Player } from './models/Player.model';
 import useStream from './hooks/useStream';
-import useCallManager from './hooks/useCallManager';
+import useCallManager, { TPeer } from './hooks/useCallManager';
 
 import { useDeviceStore } from './store/deviceStore';
 import UserMedia from './components/UserMedia/UserMedia';
 import MediaIcon from './components/MediaIcon/MediaIcon';
 import { FaVideoSlash, FaVideo } from 'react-icons/fa';
+import Video from './components/Video/Video';
 
 export const MODAL_TYPES = {
   MAIN: 'MAIN',
@@ -27,16 +28,13 @@ export const MODAL_TYPES = {
 
 function App() {
   const parentEl = useRef<HTMLDivElement>(null);
-  // const { joinOrCreate, room, connectionLoading } = useRoom();
   const { joinOrCreate, room, isLoading } = useRoomStore();
   const { game, gameLoading } = useGame(parentEl, gameConfig);
   const [currentModal, setCurrentModal] = useState(MODAL_TYPES.MAIN);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { handleUserMedia, changeMediaSource, toggleCamera } = useStream(videoRef);
-  // const { isVideoActive, stream } = useDeviceStore((state) => state);
-  const { peers }= useCallManager();
-  console.log(peers, "Here");
-  
+  const { peers } = useCallManager();
+
   const handleJoinGame = (selectedChar: number, name: string) => {
     if (game) {
       room?.send('join-game', { selectedChar, name });
@@ -52,6 +50,11 @@ function App() {
 
   return (
     <div className='App'>
+      <div className='grid grid-cols-6 gap-4 px-8 py-2 w-3/4 place-content-center border-2 m-auto '>
+        {peers.map((peer: TPeer, index) => {
+          return <Video key={index} peer={peer} />;
+        })}
+      </div>
       <UserMedia toggleCamera={toggleCamera} ref={videoRef} />
       {gameLoading ? (
         <Loader text='Loading Game Assets...' centered />
