@@ -34,6 +34,7 @@ function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { handleUserMedia, changeMediaSource, toggleCamera } = useStream(videoRef);
   const { peers } = useCallManager();
+  const stream = useDeviceStore((state) => state.stream);
 
   const handleJoinGame = (selectedChar: number, name: string) => {
     if (game) {
@@ -50,11 +51,15 @@ function App() {
 
   return (
     <div className='App'>
-      <div className='grid grid-cols-6 gap-4 px-8 py-2 w-3/4 place-content-center border-2 m-auto '>
-        {peers.map((peer: TPeer, index) => {
-          return <Video key={index} peer={peer} />;
-        })}
-      </div>
+      {peers.length > 0 && (
+        <>
+          <div className='flex flex-wrap gap-4 px-8 py-2 w-3/4 m-auto fixed left-1/2 -translate-x-1/2 top-5 justify-center'>
+            {peers.map((peer: TPeer) => {
+              return <Video key={peer.peerID} peer={peer} />;
+            })}
+          </div>
+        </>
+      )}
       <UserMedia toggleCamera={toggleCamera} ref={videoRef} />
       {gameLoading ? (
         <Loader text='Loading Game Assets...' centered />

@@ -13,9 +13,9 @@ function Video({ peer }: { peer: TPeer }) {
   }, [peer.peer]);
 
   return (
-    <div className='col-span-3 md:col-span-2 w-full relative'>
+    <div className='relative max-h-48 rounded basis-48 shrink-0 h-[150px]'>
       {!isConnected && 'Loading..'}
-      <video ref={videoRef} autoPlay playsInline className='col-span-3 md:col-span-2 w-full' />
+      <video ref={videoRef} autoPlay playsInline className='w-full h-full' />
     </div>
   );
 }

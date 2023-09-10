@@ -31,3 +31,8 @@ export const colorArray = [
   '#FF1A66',
   '#E6331A',
 ];
+
+export const getRandomNumber = (max: number): number => {
+  const n = Math.round(Math.random() * max);
+  return n;
+};

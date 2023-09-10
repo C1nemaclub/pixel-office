@@ -62,6 +62,8 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
 
   const handleStream = (stream: MediaStream) => {
     videoRef.current!.srcObject = stream;
+    videoRef.current!.muted = true;
+
     dispatch({ type: 'SET_STREAM', payload: stream });
   };
 
