@@ -16,15 +16,17 @@ const useCallManager = () => {
   const peersRef = useRef<TPeer[]>([]);
 
   const { room } = useRoomStore();
-  const { stream } = useDeviceStore();
+  const stream = useDeviceStore((state) => state.stream);
 
   useEffect(() => {
-    if (room) {
+    if (room && stream) {
+      setMe(room.sessionId);
       room.onMessage('current-players', (players: Player[]) => {
         console.log(players);
         const peers: TPeer[] = [];
         players.forEach((player: Player) => {
-          const peer = createPeer(player.id, room.id, stream);
+          if (player.id === room.sessionId) return;
+          const peer = createPeer(player.id, room.id);
           peersRef.current.push({
             peerID: player.id,
             peer,
@@ -34,22 +36,37 @@ const useCallManager = () => {
         setPeers(peers);
       });
 
-      room.onMessage(
-        'user-joined',
-        (payload: { signal: SignalData; callerID: string }) => {
-          toast.success(`${payload.callerID} just joined the room!`)
-          const peer = addPeer(payload.signal, payload.callerID, stream);
-          peersRef.current.push({
-            peerID: payload.callerID,
-            peer,
-          });
-          setPeers((users: TPeer[]) => [...users, {peer, peerID: payload.callerID}]);
-        }
-      );
-    }
-  }, [room]);
+      room.onMessage('user-joined', (payload: { signal: SignalData; callerID: string }) => {
+        console.log('User Joined');
+        alert(`${payload.callerID} just joined the room!`);
+        const peer = addPeer(payload.signal, payload.callerID, stream);
+        peersRef.current.push({
+          peerID: payload.callerID,
+          peer,
+        });
+        setPeers((users: TPeer[]) => [...users, { peer, peerID: payload.callerID }]);
+      });
 
-  const createPeer = (userToCall: string, callerID: string, stream: MediaStream | null): Peer.Instance => {
+      room.onMessage('call-accepted', (payload: { signal: SignalData; id: string }) => {
+        const peerToConnect = peersRef.current.find((peer: TPeer) => peer.peerID === payload.id);
+
+        peerToConnect?.peer.signal(payload.signal);
+      });
+
+      room.onMessage('user-disconnected', (userID: string) => {
+        alert(`${userID} just left the room!`);
+        const peerToDisconnect = peersRef.current.find((peer: TPeer) => peer.peerID === userID);
+
+        if (peerToDisconnect) peerToDisconnect.peer.destroy();
+        peersRef.current.filter((peer: TPeer) => peer.peerID !== userID);
+        setPeers((users: TPeer[]) => {
+          return users.filter((user: TPeer) => user.peerID !== userID);
+        });
+      });
+    }
+  }, [room, stream]);
+
+  const createPeer = (userToCall: string, callerID: string): Peer.Instance => {
     if (!stream) throw new Error('Stream is null');
     const peer = new Peer({
       initiator: true,
@@ -60,11 +77,29 @@ const useCallManager = () => {
     peer.on('signal', (signal) => {
       room?.send('call-user', { signal, callerID, userToCall });
     });
+    console.log('Done');
 
     return peer;
   };
 
-  return {};
+  const addPeer = (incomingSignal: SignalData, callerID: string, stream: MediaStream | null): Peer.Instance => {
+    if (!stream) throw new Error('Stream is null');
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream,
+    });
+
+    peer.on('signal', (signal: SignalData) => {
+      room?.send('answer-call', { signal, callerID });
+    });
+
+    peer.signal(incomingSignal);
+
+    return peer;
+  };
+
+  return { peers };
 };
 
 export default useCallManager;

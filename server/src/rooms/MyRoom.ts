@@ -77,6 +77,18 @@ export class MyRoom extends Room<MyRoomState> {
         ...movementData,
       });
     });
+
+    this.onMessage('call-user', (_, payload) => {
+      this.sendToClient(payload.userToCall, 'user-joined', { signal: payload.signal, callerID: payload.callerID });
+    });
+
+    // socket.on('call-user', (payload) => {
+    //   io.to(payload.userToCall).emit('user-joined', { signal: payload.signal, callerID: payload.callerID });
+    // });
+
+    // socket.on('answer-call', (payload)=>{
+    //   io.to(payload.callerID).emit('call-accepted', {signal: payload.signal, id: socket.id})
+    // })
   }
 
   onLeave(client: Client, consented: boolean) {
@@ -101,5 +113,10 @@ export class MyRoom extends Room<MyRoomState> {
   }
   getAllPlayers() {
     return Object.values(players);
+  }
+
+  sendToClient(clientId: string, eventMessage: string, payload: any) {
+    const targetClient = this.clients.find((c) => c.sessionId === clientId);
+    targetClient.send(eventMessage, payload);
   }
 }
