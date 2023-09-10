@@ -34,8 +34,9 @@ function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { handleUserMedia, changeMediaSource, toggleCamera } = useStream(videoRef);
   // const { isVideoActive, stream } = useDeviceStore((state) => state);
-  useCallManager();
-
+  const { peers }= useCallManager();
+  console.log(peers, "Here");
+  
   const handleJoinGame = (selectedChar: number, name: string) => {
     if (game) {
       room?.send('join-game', { selectedChar, name });

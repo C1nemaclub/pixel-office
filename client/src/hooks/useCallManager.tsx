@@ -26,7 +26,7 @@ const useCallManager = () => {
         const peers: TPeer[] = [];
         players.forEach((player: Player) => {
           if (player.id === room.sessionId) return;
-          const peer = createPeer(player.id, room.id);
+          const peer = createPeer(player.id, room.sessionId);
           peersRef.current.push({
             peerID: player.id,
             peer,
@@ -38,7 +38,7 @@ const useCallManager = () => {
 
       room.onMessage('user-joined', (payload: { signal: SignalData; callerID: string }) => {
         console.log('User Joined');
-        alert(`${payload.callerID} just joined the room!`);
+        // alert(`${payload.callerID} just joined the room!`);
         const peer = addPeer(payload.signal, payload.callerID, stream);
         peersRef.current.push({
           peerID: payload.callerID,
@@ -48,6 +48,7 @@ const useCallManager = () => {
       });
 
       room.onMessage('call-accepted', (payload: { signal: SignalData; id: string }) => {
+        alert(`${payload.id} just accepted your call!`);
         const peerToConnect = peersRef.current.find((peer: TPeer) => peer.peerID === payload.id);
 
         peerToConnect?.peer.signal(payload.signal);
@@ -75,6 +76,7 @@ const useCallManager = () => {
     });
 
     peer.on('signal', (signal) => {
+      alert('Calling');
       room?.send('call-user', { signal, callerID, userToCall });
     });
     console.log('Done');
@@ -91,6 +93,7 @@ const useCallManager = () => {
     });
 
     peer.on('signal', (signal: SignalData) => {
+      alert('Answering');
       room?.send('answer-call', { signal, callerID });
     });
 

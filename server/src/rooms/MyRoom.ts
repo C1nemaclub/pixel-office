@@ -79,6 +79,8 @@ export class MyRoom extends Room<MyRoomState> {
     });
 
     this.onMessage('call-user', (_, payload) => {
+      console.log('Calling user');
+
       this.sendToClient(payload.userToCall, 'user-joined', { signal: payload.signal, callerID: payload.callerID });
     });
 
@@ -86,9 +88,10 @@ export class MyRoom extends Room<MyRoomState> {
     //   io.to(payload.userToCall).emit('user-joined', { signal: payload.signal, callerID: payload.callerID });
     // });
 
-    // socket.on('answer-call', (payload)=>{
-    //   io.to(payload.callerID).emit('call-accepted', {signal: payload.signal, id: socket.id})
-    // })
+    this.onMessage('answer-call', (client, payload) => {
+      this.sendToClient(payload.callerID, 'call-accepted', { signal: payload.signal, id: client.sessionId });
+      // io.to(payload.callerID).emit('call-accepted', {signal: payload.signal, id: socket.id})
+    });
   }
 
   onLeave(client: Client, consented: boolean) {
@@ -116,6 +119,11 @@ export class MyRoom extends Room<MyRoomState> {
   }
 
   sendToClient(clientId: string, eventMessage: string, payload: any) {
+    if (eventMessage === 'call-accepted') {
+      console.log('Id to find', clientId);
+      this.clients.forEach((client) => console.log(client.sessionId));
+    }
+
     const targetClient = this.clients.find((c) => c.sessionId === clientId);
     targetClient.send(eventMessage, payload);
   }
