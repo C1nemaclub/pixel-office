@@ -12,7 +12,7 @@ import { CallManager } from './calls/CallManager';
 import { Player } from './models/Player.model';
 import useStream from './hooks/useStream';
 import useCallManager from './hooks/useCallManager';
-import Button from './components/Button/Button';
+
 import { useDeviceStore } from './store/deviceStore';
 import UserMedia from './components/UserMedia/UserMedia';
 import MediaIcon from './components/MediaIcon/MediaIcon';
@@ -34,7 +34,7 @@ function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { handleUserMedia, changeMediaSource, toggleCamera } = useStream(videoRef);
   // const { isVideoActive, stream } = useDeviceStore((state) => state);
-  // useCallManager(stream);
+  useCallManager();
 
   const handleJoinGame = (selectedChar: number, name: string) => {
     if (game) {
@@ -44,8 +44,6 @@ function App() {
   };
 
   useEffect(() => {
-
-
     return () => {
       room?.leave();
     };

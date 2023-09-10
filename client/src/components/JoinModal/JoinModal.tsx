@@ -2,6 +2,8 @@ import { useState } from 'react';
 import CharacterCarousel from '../CharacterCarousel/CharacterCarousel';
 import Button from '../Button/Button';
 import { useDeviceStore } from '../../store/deviceStore';
+import Select from '../core/Select';
+
 
 type JoinModalProps = {
   onJoin: (selectedChar: number, name: string) => void;
@@ -12,7 +14,6 @@ function JoinModal({ onJoin, changeMediaSource }: JoinModalProps) {
   const [activeChar, setActiveChar] = useState<number>(4);
   const [name, setName] = useState<string>('');
   const { audioDevices, videoDevices } = useDeviceStore((state) => state);
-  console.log(videoDevices);
 
   const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,24 +22,12 @@ function JoinModal({ onJoin, changeMediaSource }: JoinModalProps) {
     onJoin(activeChar, name);
   };
 
-  const handleAudioSourceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    changeMediaSource(e.target.value, e.target.name);
-  };
-
   return (
     <div className='py-12 px-6 rounded w-full min-w-[300px] max-w-[400px] flex flex-col justify-center items-center gap-4 bg-[#110c27] absolute-center'>
       <h1 className='text-3xl font-bold text-center text-slate-50'>Pick your Avatar</h1>
       <div className='w-full max-w-[400px] flex flex-col gap-2'>
-        <select name='audio' onChange={handleAudioSourceChange}>
-          {audioDevices.map((device) => {
-            return <option value={device.deviceId}>{device.label}</option>;
-          })}
-        </select>
-        <select name='video' onChange={handleAudioSourceChange}>
-          {videoDevices.map((device) => {
-            return <option value={device.deviceId}>{device.label}</option>;
-          })}
-        </select>
+        <Select options={audioDevices.map(device => ({value: device.deviceId, label: device.label}))} name="audio"  onChange={changeMediaSource}/>
+        <Select options={videoDevices.map(device => ({value: device.deviceId, label: device.label}))} name="video"  onChange={changeMediaSource}/>
       </div>
       <form onSubmit={formSubmit} className='flex flex-col gap-4'>
         <CharacterCarousel activeChar={activeChar} setActiveChar={setActiveChar} />

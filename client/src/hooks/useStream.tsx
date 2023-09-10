@@ -34,31 +34,27 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
 
   const toggleCamera = (deviceName: string) => {
     if (deviceName === 'video') {
-      const isLive = stream?.getVideoTracks()[0].enabled;
+      const videoTracks = stream?.getVideoTracks()[0];
+      if (!videoTracks) return;
 
+      const isLive = videoTracks.enabled;
       if (isLive) {
-        stream?.getVideoTracks().forEach((track) => {
-          track.enabled = false;
-        });
+        videoTracks.enabled = false;
         dispatch({ type: 'SET_VIDEO_STATE', payload: 'stop' });
       } else {
-        stream?.getVideoTracks().forEach((track) => {
-          track.enabled = true;
-        });
+        videoTracks.enabled = true;
         dispatch({ type: 'SET_VIDEO_STATE', payload: 'live' });
       }
     } else {
-      const isLive = stream?.getAudioTracks()[0].enabled;
+      const audioTracks = stream?.getAudioTracks()[0];
+      if (!audioTracks) return;
 
+      const isLive = audioTracks.enabled;
       if (isLive) {
-        stream?.getAudioTracks().forEach((track) => {
-          track.enabled = false;
-        });
+        audioTracks.enabled = false;
         dispatch({ type: 'SET_AUDIO_STATE', payload: 'stop' });
       } else {
-        stream?.getAudioTracks().forEach((track) => {
-          track.enabled = true;
-        });
+        audioTracks.enabled = true;
         dispatch({ type: 'SET_AUDIO_STATE', payload: 'live' });
       }
     }

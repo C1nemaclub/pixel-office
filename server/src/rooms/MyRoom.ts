@@ -47,7 +47,7 @@ export class MyRoom extends Room<MyRoomState> {
     // }
 
     console.log(client.sessionId, 'joined!', options);
-    client.send('welcome', 'Welcome to the room!');
+    client.send('welcome', 'Welcome to the server!');
 
     this.onMessage('join-game', (client, playerData: { selectedChar: number; name: string }) => {
       console.log('join game', playerData);
@@ -59,6 +59,7 @@ export class MyRoom extends Room<MyRoomState> {
       };
       this.broadcastToAllButMe(client, 'new-player', players[client.sessionId]);
       client.send('current-players', this.getAllPlayers());
+      client.send('hello', 'Welcome to the server!');
       this.broadcast('chat-event', { id: client.sessionId, message: `${playerData.name} joined the room`, type: 'event' });
     });
 
