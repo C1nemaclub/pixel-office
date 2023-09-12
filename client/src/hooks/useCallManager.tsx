@@ -7,6 +7,7 @@ import { Player } from '../models/Player.model';
 export type TPeer = {
   peerID: string;
   peer: Peer.Instance;
+  playerData: Player;
 };
 
 const useCallManager = () => {
@@ -28,30 +29,30 @@ const useCallManager = () => {
           peersRef.current.push({
             peerID: player.id,
             peer,
+            playerData: player,
           });
-          peers.push({ peerID: player.id, peer });
+          peers.push({ peerID: player.id, peer, playerData: player });
         });
         setPeers(peers);
       });
 
-      room.onMessage('user-joined', (payload: { signal: SignalData; callerID: string }) => {
+      room.onMessage('user-joined', (payload: { signal: SignalData; callerID: string, callerData: Player }) => {
         const peer = addPeer(payload.signal, payload.callerID, stream);
         peersRef.current.push({
           peerID: payload.callerID,
           peer,
+          playerData: payload.callerData,
         });
-        setPeers((users: TPeer[]) => [...users, { peer, peerID: payload.callerID }]);
+        setPeers((users: TPeer[]) => [...users, { peer, peerID: payload.callerID, playerData: payload.callerData }]);
       });
 
-      room.onMessage('call-accepted', (payload: { signal: SignalData; id: string }) => {
+      room.onMessage('call-accepted', (payload: { signal: SignalData; id: string, playerData: Player }) => {
         const peerToConnect = peersRef.current.find((peer: TPeer) => peer.peerID === payload.id);
 
         peerToConnect?.peer.signal(payload.signal);
       });
 
       room.onMessage('player-left', (userID: string) => {
-        console.log('Player left: ' + userID);
-        
         const peerToDisconnect = peersRef.current.find((peer: TPeer) => peer.peerID === userID);
 
         if (peerToDisconnect) peerToDisconnect.peer.destroy();

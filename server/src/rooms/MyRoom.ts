@@ -80,11 +80,13 @@ export class MyRoom extends Room<MyRoomState> {
 
     this.onMessage('call-user', (_, payload) => {
       console.log('Calling user');
-      this.sendToClient(payload.userToCall, 'user-joined', { signal: payload.signal, callerID: payload.callerID });
+      const callerData = this.getPlayerDataById(payload.callerID);
+      this.sendToClient(payload.userToCall, 'user-joined', { signal: payload.signal, callerID: payload.callerID, callerData });
     });
 
     this.onMessage('answer-call', (client, payload) => {
-      this.sendToClient(payload.callerID, 'call-accepted', { signal: payload.signal, id: client.sessionId });
+      const playerData = this.getPlayerDataById(client.sessionId);
+      this.sendToClient(payload.callerID, 'call-accepted', { signal: payload.signal, id: client.sessionId, playerData });
     });
   }
 
@@ -120,5 +122,9 @@ export class MyRoom extends Room<MyRoomState> {
 
     const targetClient = this.clients.find((c) => c.sessionId === clientId);
     targetClient.send(eventMessage, payload);
+  }
+
+  getPlayerDataById(id: string) {
+    return players[id];
   }
 }
