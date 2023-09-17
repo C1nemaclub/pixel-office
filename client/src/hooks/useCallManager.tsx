@@ -4,6 +4,14 @@ import Peer, { SignalData } from 'simple-peer';
 import { useState, useEffect, useRef } from 'react';
 import { Player } from '../models/Player.model';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import global from 'global'
+
+import * as process from "process";
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+global.process = process;
+
 export type TPeer = {
   peerID: string;
   peer: Peer.Instance;

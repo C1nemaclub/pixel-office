@@ -8,9 +8,19 @@ export default defineConfig({
     open: true,
     host: true,
   },
+  resolve: {
+    alias: {
+      'readable-stream': 'vite-compatible-readable-stream',
+    },
+  },
   define: {
     global: 'window',
-    'process.env': {},
-    // 'process.env': process.env,
+    // 'process.env': {},
+    'process.env': process.env,
+  },
+  build: {
+    rollupOptions: {
+      external: ['window'],
+    },
   },
 });
