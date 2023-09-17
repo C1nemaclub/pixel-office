@@ -20,7 +20,7 @@ function JoinModal({ onJoin, changeMediaSource }: JoinModalProps) {
   const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!name) return;
-    if (name.length > 15) return;
+    if (name.length > 30) return;
     onJoin(activeChar, name);
   };
 

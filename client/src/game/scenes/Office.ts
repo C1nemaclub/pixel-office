@@ -31,8 +31,8 @@ export class Office extends Phaser.Scene {
     });
 
     this.realRoom.onMessage('current-players', (players: Player[]) => {
-      console.log("Current!", players)
-      
+      console.log('Current!', players);
+
       players.forEach((player: Player) => {
         if (player.id === this.realRoom.sessionId) {
           this.addPlayer(player);
@@ -55,20 +55,13 @@ export class Office extends Phaser.Scene {
 
     tileMap.createLayer(0, 'FloorAndGround', 0, 0)?.setScale(this.TILE_SCALE);
     tileMap.createLayer(1, 'FloorAndGround', 0, 0)?.setScale(this.TILE_SCALE);
-    tileMap
-      .createLayer(2, 'Modern_Office_Black_Shadow', 0, 0)
-      ?.setScale(this.TILE_SCALE);
-    tileMap
-      .createLayer(3, 'Modern_Office_Black_Shadow', 0, 0)
-      ?.setScale(this.TILE_SCALE);
+    tileMap.createLayer(2, 'Modern_Office_Black_Shadow', 0, 0)?.setScale(this.TILE_SCALE);
+    tileMap.createLayer(3, 'Modern_Office_Black_Shadow', 0, 0)?.setScale(this.TILE_SCALE);
     tileMap.createLayer(4, 'collision', 0, 0)?.setScale(this.TILE_SCALE);
 
-    const playerSprite = this.physics.add.sprite(0, 0, 'player')
+    const playerSprite = this.physics.add.sprite(0, 0, 'player');
 
-    this.cameras.main.setFollowOffset(
-      -playerSprite.width,
-      -playerSprite.height
-    );
+    this.cameras.main.setFollowOffset(-playerSprite.width, -playerSprite.height);
 
     const gridEngineConfig: GridEngineConfig = {
       characters: [
@@ -126,29 +119,30 @@ export class Office extends Phaser.Scene {
 
   addPlayer(playerInfo: Player) {
     const { x, y, id, name, selectedChar } = playerInfo;
-    const playerSprite = this.add
-      .sprite(x, y, 'player')
-      .setName(id)
-      .setScale(1.5);
-    const playerName = this.add.text(0, -10, name, {
-      color: '#00f7ff',
-      fontSize: '18px',
-      align: 'center',
-      fontFamily: 'Candara',
-      backgroundColor: "#363636",
-    }).setPadding(5, 2.4, 5, 2.5);
+    const playerSprite = this.add.sprite(x, y, 'player').setName(id).setScale(1.5);
+    const playerName = this.add
+      .text(0, -10, name, {
+        color: '#fff',
+        fontSize: '18px',
+        align: 'center',
+        fontFamily: 'Candara',
+      })
+      .setPadding(5, 2.4, 5, 2.5);
 
-    playerSprite.setOrigin(0.5, 1);
     const offsetX = (playerSprite.width - playerName.width) / 2 + 10;
-    const offsetY = -playerName.height - 5; // Adjust this value as needed to position the name correctly above the character's head
-    playerName.setPosition(playerSprite.x + offsetX, playerSprite.y + offsetY);
+    const offsetY = -playerName.height; // Adjust this value as needed to position the name correctly above the character's head
 
-    const container = this.add.container(0, 0, [playerSprite, playerName]);
+    const rectangle = this.add.graphics();
+    rectangle.fillStyle(0x363636, 1);
+    rectangle.fillRoundedRect(0, 0, playerName.width, 24, 5);
+    
+    playerSprite.setOrigin(0.5, 1);
+    playerName.setPosition(playerSprite.x + offsetX, playerSprite.y + offsetY);
+    rectangle.setPosition(playerSprite.x + offsetX, playerSprite.y + offsetY);
+
+    const container = this.add.container(0, 0, [playerSprite, rectangle, playerName]);
     this.cameras.main.startFollow(container, true);
-    this.cameras.main.setFollowOffset(
-      -playerSprite.width,
-      -playerSprite.height
-    )
+    this.cameras.main.setFollowOffset(-playerSprite.width, -playerSprite.height);
 
     this.gridEngine.addCharacter({
       id: 'player',
@@ -163,29 +157,23 @@ export class Office extends Phaser.Scene {
 
   addOtherPlayer(playerInfo: Player) {
     const { x, y, id, name, selectedChar } = playerInfo;
-    const otherPlayerSprite = this.add
-      .sprite(x, y, 'player')
-      .setName(id)
-      .setScale(1.5);
-    const otherPlayerName = this.add.text(0, -10, name, {
-      color: 'white',
-      fontSize: '18px',
-      align: 'center',
-      fontFamily: 'Helvetica',
-      backgroundColor: "#363636"
-    }).setPadding(5, 2.4, 5, 2.5);
+    const otherPlayerSprite = this.add.sprite(x, y, 'player').setName(id).setScale(1.5);
+    const otherPlayerName = this.add
+      .text(0, -10, name, {
+        color: 'white',
+        fontSize: '18px',
+        align: 'center',
+        fontFamily: 'Helvetica',
+        backgroundColor: '#363636',
+      })
+      .setPadding(5, 2.4, 5, 2.5);
 
     otherPlayerSprite.setOrigin(0.5, 1);
     const offsetX = (otherPlayerSprite.width - otherPlayerName.width) / 2 + 10;
     const offsetY = -otherPlayerName.height - 5; // Adjust this value as needed to position the name correctly above the character's head
-    otherPlayerName.setPosition(
-      otherPlayerSprite.x + offsetX,
-      otherPlayerSprite.y + offsetY
-    );
+    otherPlayerName.setPosition(otherPlayerSprite.x + offsetX, otherPlayerSprite.y + offsetY);
 
-    const container = this.add
-      .container(0, 0, [otherPlayerSprite, otherPlayerName])
-      .setName(id);
+    const container = this.add.container(0, 0, [otherPlayerSprite, otherPlayerName]).setName(id);
     this.gridEngine.addCharacter({
       id,
       sprite: otherPlayerSprite,
@@ -200,10 +188,8 @@ export class Office extends Phaser.Scene {
 
   removePlayer(playerId: string) {
     this.gridEngine.removeCharacter(playerId);
-    this.otherPlayersGroup
-      .getChildren()
-      .forEach((player: GameObjects.GameObject) => {
-        if (player.name === playerId) player.destroy();
-      });
+    this.otherPlayersGroup.getChildren().forEach((player: GameObjects.GameObject) => {
+      if (player.name === playerId) player.destroy();
+    });
   }
 }

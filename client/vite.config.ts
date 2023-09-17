@@ -13,11 +13,11 @@ export default defineConfig({
       'readable-stream': 'vite-compatible-readable-stream',
     },
   },
-  // define: {
-  //   global: 'window',
-  //   // 'process.env': {},
-  //   'process.env': process.env,
-  // },
+  define: {
+    global: 'window',
+    // 'process.env': {},
+    'process.env': process.env,
+  },
   // build: {
   //   rollupOptions: {
   //     external: ['window'],
