@@ -1,4 +1,5 @@
 import { useDeviceStore } from '../store/deviceStore';
+import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
 
 const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
@@ -10,9 +11,11 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
       .then((media) => {
         handleStream(media);
         listUserDevices();
+        toast.success('Successfully connected to your device.');
       })
       .catch((error) => {
         console.log(error);
+        toast.error("There was an error accessing your device's camera and microphone.");
       });
   };
 

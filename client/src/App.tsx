@@ -11,13 +11,7 @@ import useStream from './hooks/useStream';
 import useCallManager, { TPeer } from './hooks/useCallManager';
 import UserMedia from './components/UserMedia/UserMedia';
 import Video from './components/Video/Video';
-
-export const MODAL_TYPES = {
-  MAIN: 'MAIN',
-  JOIN: 'JOIN',
-  CREATE: 'CREATE',
-  EMPTY: 'EMPTY',
-};
+import { MODAL_TYPES } from './utils/contants';
 
 function App() {
   const parentEl = useRef<HTMLDivElement>(null);

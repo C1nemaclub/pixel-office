@@ -44,3 +44,10 @@ export const SOCIALS = [
     icon: 'linkedin',
   },
 ];
+
+export const MODAL_TYPES = {
+  MAIN: 'MAIN',
+  JOIN: 'JOIN',
+  CREATE: 'CREATE',
+  EMPTY: 'EMPTY',
+};

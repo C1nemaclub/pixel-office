@@ -14,7 +14,7 @@ const Select: FC<SelectProps> = ({ options, name, onChange, Icon }) => {
       {Icon ?? null}
       <Selector
         options={options}
-        defaultValue={{ value: 'default', label: name }}
+        defaultValue={options[0]}
         onChange={(e) => {
           if (!e) return;
           onChange(e?.value, name);
