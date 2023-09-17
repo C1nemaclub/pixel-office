@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
 
 const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
-  const { dispatch, stream, isAudioActive, isVideoActive } = useDeviceStore((state) => state);
+  const { dispatch, stream } = useDeviceStore((state) => state);
 
   const handleUserMedia = () => {
     navigator.mediaDevices
@@ -70,7 +70,7 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
     dispatch({ type: 'SET_STREAM', payload: stream });
   };
 
-  const deviceChangeHandler = (e: any) => {
+  const deviceChangeHandler = () => {
     handleUserMedia();
   };
 

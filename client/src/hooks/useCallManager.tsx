@@ -36,7 +36,7 @@ const useCallManager = () => {
         setPeers(peers);
       });
 
-      room.onMessage('user-joined', (payload: { signal: SignalData; callerID: string, callerData: Player }) => {
+      room.onMessage('user-joined', (payload: { signal: SignalData; callerID: string; callerData: Player }) => {
         const peer = addPeer(payload.signal, payload.callerID, stream);
         peersRef.current.push({
           peerID: payload.callerID,
@@ -46,7 +46,7 @@ const useCallManager = () => {
         setPeers((users: TPeer[]) => [...users, { peer, peerID: payload.callerID, playerData: payload.callerData }]);
       });
 
-      room.onMessage('call-accepted', (payload: { signal: SignalData; id: string, playerData: Player }) => {
+      room.onMessage('call-accepted', (payload: { signal: SignalData; id: string; playerData: Player }) => {
         const peerToConnect = peersRef.current.find((peer: TPeer) => peer.peerID === payload.id);
 
         peerToConnect?.peer.signal(payload.signal);
@@ -99,7 +99,7 @@ const useCallManager = () => {
     return peer;
   };
 
-  return { peers };
+  return { peers, me };
 };
 
 export default useCallManager;

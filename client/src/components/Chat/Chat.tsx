@@ -22,8 +22,8 @@ const Chat = () => {
         setChatHistory((prev) => [...prev, event]);
         setIsChatOpen(true);
       });
-      room.onMessage('welcome', (message: any) => {
-        // console.log("Wlecome", message);
+      room.onMessage('welcome', (message: string) => {
+        console.log(message);
       });
     }
   }, [room]);
