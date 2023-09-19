@@ -6,9 +6,9 @@ import { Player } from '../models/Player.model';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import global from 'global'
+import global from 'global';
 
-import * as process from "process";
+import * as process from 'process';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 global.process = process;
 
@@ -30,6 +30,8 @@ const useCallManager = () => {
     if (room && stream) {
       setMe(room.sessionId);
       room.onMessage('current-players', (players: Player[]) => {
+        console.log(players, "x");
+        
         const peers: TPeer[] = [];
         players.forEach((player: Player) => {
           if (player.id === room.sessionId) return;
@@ -109,8 +111,6 @@ const useCallManager = () => {
       trickle: false,
       stream,
     });
-
-    console.log('Answering ' + callerID);
 
     peer.on('signal', (signal: SignalData) => {
       room?.send('answer-call', { signal, callerID });

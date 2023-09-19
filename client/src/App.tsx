@@ -12,6 +12,7 @@ import useCallManager, { TPeer } from './hooks/useCallManager';
 import UserMedia from './components/UserMedia/UserMedia';
 import Video from './components/Video/Video';
 import { MODAL_TYPES } from './utils/contants';
+import { useDeviceStore } from './store/deviceStore';
 
 function App() {
   const parentEl = useRef<HTMLDivElement>(null);
@@ -20,11 +21,12 @@ function App() {
   const [currentModal, setCurrentModal] = useState(MODAL_TYPES.MAIN);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { handleUserMedia, changeMediaSource, toggleCamera } = useStream(videoRef);
+  const { isAudioActive, isVideoActive, stream } = useDeviceStore((state) => state);
   const { peers } = useCallManager();
 
   const handleJoinGame = (selectedChar: number, name: string) => {
     if (game) {
-      room?.send('join-game', { selectedChar, name });
+      room?.send('join-game', { selectedChar, name, hasAudioActive: isAudioActive, hasVideoActive: isVideoActive, didAllowMedia: stream !== null });
       setCurrentModal(MODAL_TYPES.EMPTY);
     }
   };
@@ -60,7 +62,9 @@ function App() {
               }}
             />
           )}
-          {currentModal === MODAL_TYPES.JOIN && <JoinModal onJoin={handleJoinGame} changeMediaSource={changeMediaSource} />}
+          {currentModal === MODAL_TYPES.JOIN && (
+            <JoinModal handleUserMedia={handleUserMedia} onJoin={handleJoinGame} changeMediaSource={changeMediaSource} />
+          )}
         </>
       )}
       {room && game && <Chat />}

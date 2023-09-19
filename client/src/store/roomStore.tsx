@@ -2,6 +2,7 @@ import { Room } from 'colyseus.js';
 import { create } from 'zustand';
 import { client } from '../colyseus';
 import { Background } from '../game/scenes';
+import { Player } from '../models/Player.model';
 
 type RoomStoreType = {
   name: string;
@@ -9,6 +10,7 @@ type RoomStoreType = {
   isLoading: boolean;
   joinOrCreate: (game: any, callback: () => void) => void;
   error: string | null;
+  updatePlayerStatus: (player: Partial<Player>) => void;
 };
 
 export const useRoomStore = create<RoomStoreType>((set) => {
@@ -33,9 +35,15 @@ export const useRoomStore = create<RoomStoreType>((set) => {
         })
         .finally(() => set({ isLoading: false }));
     },
+    updatePlayerStatus: (player: Partial<Player>) => {
+      const room = useRoomStore.getState().room;
+      console.log(room);
+      
+      if (!room) throw new Error('Room is null');
+      room.send('update-player-status', player);
+    }
   };
 });
-
 
 // const useStore = create((set) => ({
 //   count: 0,

@@ -36,9 +36,9 @@ const reducer = (state: DeviceStoreType, action: Action): DeviceStoreType => {
     case 'SET_STREAM':
       return { ...state, stream: action.payload };
     case 'SET_AUDIO_STATE':
-      return { ...state, isAudioActive: action.payload === 'live' ? true : false };
+      return { ...state, isAudioActive: action.payload === 'live' };
     case 'SET_VIDEO_STATE':
-      return { ...state, isVideoActive: action.payload === 'live' ? true : false };
+      return { ...state, isVideoActive: action.payload === 'live' };
     case 'SET_ERROR':
       return { ...state, error: action.payload };
     default:

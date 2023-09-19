@@ -6,16 +6,19 @@ import Select from '../core/Select';
 import { getRandomNumber } from '../../utils/utils';
 import { AiTwotoneAudio, AiFillVideoCamera } from 'react-icons/ai';
 import { Skeleton } from '../core/Skeleton';
+import Loader from '../Loader/Loader';
+import Spinner from '../core/Spinner';
 
 type JoinModalProps = {
   onJoin: (selectedChar: number, name: string) => void;
   changeMediaSource: (deviceId: string, deviceType: string) => void;
+  handleUserMedia: () => void;
 };
 
-function JoinModal({ onJoin, changeMediaSource }: JoinModalProps) {
+function JoinModal({ onJoin, changeMediaSource, handleUserMedia }: JoinModalProps) {
   const [activeChar, setActiveChar] = useState<number>(getRandomNumber(16));
   const [name, setName] = useState<string>('');
-  const { audioDevices, videoDevices } = useDeviceStore((state) => state);
+  const { audioDevices, videoDevices, error } = useDeviceStore((state) => state);
 
   const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,8 +48,15 @@ function JoinModal({ onJoin, changeMediaSource }: JoinModalProps) {
           </>
         ) : (
           <>
-            <Skeleton className='animate-pulse h-full py-6' />
-            <Skeleton className='animate-pulse h-full py-6' />
+            {!error ? (
+              <>
+                {/* <Skeleton className='animate-pulse h-full py-6' /> */}
+                {/* <Skeleton className='animate-pulse h-full py-6' /> */}
+                <Loader text='Waiting for devices' />
+              </>
+            ) : (
+              <Button onClick={handleUserMedia} variant="outline">Connect Media</Button>
+            )}
           </>
         )}
       </div>

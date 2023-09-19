@@ -8,6 +8,9 @@ type Player = {
   y: number;
   selectedChar: number;
   name: string;
+  hasAudioActive?: boolean;
+  hasVideoActive?: boolean;
+  didAllowMedia?: boolean;
 };
 
 const players: { [key: string]: Player } = {};
@@ -78,6 +81,16 @@ export class MyRoom extends Room<MyRoomState> {
       });
     });
 
+    this.onMessage('update-player-status', (client, playerData: Player) => {
+      console.log('update-player-status', playerData);
+      players[client.sessionId] = {
+        ...players[client.sessionId],
+        ...playerData,
+      };
+      console.log(players);
+      this.broadcastToAllButMe(client, 'player-status-updated', playerData);
+    });
+
     this.onMessage('call-user', (_, payload) => {
       console.log('Calling user');
       const callerData = this.getPlayerDataById(payload.callerID);
@@ -111,7 +124,10 @@ export class MyRoom extends Room<MyRoomState> {
     return Object.values(players).filter((player: Player) => player.id !== client.sessionId);
   }
   getAllPlayers() {
-    return Object.values(players);
+    const players2 = Object.values(players);
+    console.log(players2, 'here');
+
+    return players2;
   }
 
   sendToClient(clientId: string, eventMessage: string, payload: any) {

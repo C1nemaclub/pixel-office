@@ -1,9 +1,11 @@
 import { useDeviceStore } from '../store/deviceStore';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
+import { useRoomStore } from '../store/roomStore';
 
 const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
   const { dispatch, stream } = useDeviceStore((state) => state);
+  const updatePlayer = useRoomStore((state) => state.updatePlayerStatus);
 
   const handleUserMedia = () => {
     navigator.mediaDevices
@@ -11,11 +13,14 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
       .then((media) => {
         handleStream(media);
         listUserDevices();
-        toast.success('Successfully connected to your device.');
+        toast.success('Successfully connected to your devices.');
+        updatePlayer({ hasAudioActive: true, hasVideoActive: true, didAllowMedia: true });
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         console.log(error);
+        if (error instanceof Error) dispatch({ type: 'SET_ERROR', payload: error.message });
         toast.error("There was an error accessing your device's camera and microphone.");
+        updatePlayer({ hasAudioActive: false, hasVideoActive: false, didAllowMedia: false });
       });
   };
 
@@ -44,9 +49,11 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
       if (isLive) {
         videoTracks.enabled = false;
         dispatch({ type: 'SET_VIDEO_STATE', payload: 'stop' });
+        updatePlayer({ hasVideoActive: false });
       } else {
         videoTracks.enabled = true;
         dispatch({ type: 'SET_VIDEO_STATE', payload: 'live' });
+        updatePlayer({ hasVideoActive: true });
       }
     } else {
       const audioTracks = stream?.getAudioTracks()[0];
@@ -56,9 +63,11 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
       if (isLive) {
         audioTracks.enabled = false;
         dispatch({ type: 'SET_AUDIO_STATE', payload: 'stop' });
+        updatePlayer({ hasAudioActive: false });
       } else {
         audioTracks.enabled = true;
         dispatch({ type: 'SET_AUDIO_STATE', payload: 'live' });
+        updatePlayer({ hasAudioActive: true });
       }
     }
   };

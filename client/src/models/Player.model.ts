@@ -4,4 +4,7 @@ export type Player = {
   y: number;
   name: string;
   selectedChar: number;
+  hasAudioActive: boolean;
+  hasVideoActive: boolean;
+  didAllowMedia: boolean;
 };
