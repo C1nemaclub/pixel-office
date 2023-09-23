@@ -17,10 +17,12 @@ const useStream = (videoRef: React.RefObject<HTMLVideoElement>) => {
         updatePlayer({ hasAudioActive: true, hasVideoActive: true, didAllowMedia: true });
       })
       .catch((error: unknown) => {
-        console.log(error);
-        if (error instanceof Error) dispatch({ type: 'SET_ERROR', payload: error.message });
-        toast.error("There was an error accessing your device's camera and microphone.");
+        const errorMessage = error instanceof Error ? error.message : 'There was an error accessing your device.';
+        toast.error(errorMessage);
         updatePlayer({ hasAudioActive: false, hasVideoActive: false, didAllowMedia: false });
+        dispatch({ type: 'SET_ERROR', payload: errorMessage });
+        dispatch({ type: 'SET_AUDIO_STATE', payload: 'stop' });
+        dispatch({ type: 'SET_VIDEO_STATE', payload: 'stop' });
       });
   };
 

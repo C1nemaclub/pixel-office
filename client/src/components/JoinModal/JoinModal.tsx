@@ -5,9 +5,7 @@ import { useDeviceStore } from '../../store/deviceStore';
 import Select from '../core/Select';
 import { getRandomNumber } from '../../utils/utils';
 import { AiTwotoneAudio, AiFillVideoCamera } from 'react-icons/ai';
-import { Skeleton } from '../core/Skeleton';
 import Loader from '../Loader/Loader';
-import Spinner from '../core/Spinner';
 
 type JoinModalProps = {
   onJoin: (selectedChar: number, name: string) => void;

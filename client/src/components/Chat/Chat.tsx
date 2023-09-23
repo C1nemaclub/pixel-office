@@ -43,7 +43,7 @@ const Chat = () => {
 
   return (
     <>
-      {isChatOpen && (
+      {isChatOpen && room && (
         <div className='flex flex-col justify-between  w-[450px] bg-[#110c27]  min-h-[160px] p-4 rounded fixed bottom-6 left-6'>
           <h2 className='text-slate-50 font-bold'>Chat Box</h2>
           <div className='max-h-[220px] overflow-auto chat-container' ref={chatRef}>
