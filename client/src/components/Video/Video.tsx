@@ -4,7 +4,7 @@ import Spinner from '../core/Spinner';
 
 function Video({ peer }: { peer: TPeer }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isConnected, setIsConnected] = useState<boolean>(false || peer.peer.connected);
+  const [isConnected, setIsConnected] = useState<boolean>(peer.peer.connected);
 
   useEffect(() => {
     peer.peer.on('stream', (stream: MediaStream) => {

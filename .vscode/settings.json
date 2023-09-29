@@ -1,3 +1,7 @@
 {
-  "cSpell.words": ["Twotone"]
+  "cSpell.words": ["Twotone"],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "http-localhost-9000",
+    "projectKey": "pixel-office-frontend"
+  }
 }

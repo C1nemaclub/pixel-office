@@ -47,11 +47,11 @@ const Chat = () => {
         <div className='flex flex-col justify-between  w-[450px] bg-[#110c27]  min-h-[160px] p-4 rounded fixed bottom-6 left-6'>
           <h2 className='text-slate-50 font-bold'>Chat Box</h2>
           <div className='max-h-[220px] overflow-auto chat-container' ref={chatRef}>
-            {chatHistory.map((event: EventOrMessage) => {
+            {chatHistory.map((event: EventOrMessage, index) => {
               if (event.type === 'message') {
                 const color = colorArray[event.selectedChar];
                 return (
-                  <div className='flex gap-2 justify-start items-start flex-wrap' key={event.id}>
+                  <div className='flex gap-2 justify-start items-start flex-wrap' key={index}>
                     <p className='text-slate-300'>[{event.time}]</p>
                     <p style={{ color }} className=''>
                       {event.name}
@@ -61,7 +61,7 @@ const Chat = () => {
                 );
               } else if (event.type === 'event') {
                 return (
-                  <div className='flex gap-2 justify-start items-start flex-wrap' key={event.id}>
+                  <div className='flex gap-2 justify-start items-start flex-wrap' key={index}>
                     <p className='text-slate-500'>Server: {event.message}</p>
                   </div>
                 );

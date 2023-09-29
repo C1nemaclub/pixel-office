@@ -4,7 +4,7 @@ import { gameConfig } from '../../game';
 
 const Game = () => {
   const parentEl = useRef<HTMLDivElement>(null);
-  const { game } = useGame(parentEl, gameConfig);
+  useGame(parentEl, gameConfig);
 
   return <div ref={parentEl} className='gameContainer' />;
 };

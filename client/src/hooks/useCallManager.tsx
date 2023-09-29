@@ -3,6 +3,7 @@ import { useDeviceStore } from '../store/deviceStore';
 import Peer, { SignalData } from 'simple-peer';
 import { useState, useEffect, useRef } from 'react';
 import { Player } from '../models/Player.model';
+import toast from 'react-hot-toast';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -27,50 +28,55 @@ const useCallManager = () => {
   const stream = useDeviceStore((state) => state.stream);
 
   useEffect(() => {
-    if (room && stream) {
-      setMe(room.sessionId);
-      room.onMessage('current-players', (players: Player[]) => {
-        console.log(players, "x");
-        
-        const peers: TPeer[] = [];
-        players.forEach((player: Player) => {
-          if (player.id === room.sessionId) return;
-          const peer = createPeer(player.id, room.sessionId);
-          peersRef.current.push({
-            peerID: player.id,
-            peer,
-            playerData: player,
+    try {
+      if (room && stream) {
+        setMe(room.sessionId);
+        room.onMessage('current-players', (players: Player[]) => {
+          console.log(players, 'x');
+
+          const peers: TPeer[] = [];
+          players.forEach((player: Player) => {
+            if (player.id === room.sessionId || !player.didAllowMedia) return;
+            const peer = createPeer(player.id, room.sessionId);
+            peersRef.current.push({
+              peerID: player.id,
+              peer,
+              playerData: player,
+            });
+            peers.push({ peerID: player.id, peer, playerData: player });
           });
-          peers.push({ peerID: player.id, peer, playerData: player });
+          setPeers(peers);
         });
-        setPeers(peers);
-      });
 
-      room.onMessage('user-joined', (payload: { signal: SignalData; callerID: string; callerData: Player }) => {
-        const peer = addPeer(payload.signal, payload.callerID, stream);
-        peersRef.current.push({
-          peerID: payload.callerID,
-          peer,
-          playerData: payload.callerData,
+        room.onMessage('user-joined', (payload: { signal: SignalData; callerID: string; callerData: Player }) => {
+          const peer = addPeer(payload.signal, payload.callerID, stream);
+          peersRef.current.push({
+            peerID: payload.callerID,
+            peer,
+            playerData: payload.callerData,
+          });
+          setPeers((users: TPeer[]) => [...users, { peer, peerID: payload.callerID, playerData: payload.callerData }]);
         });
-        setPeers((users: TPeer[]) => [...users, { peer, peerID: payload.callerID, playerData: payload.callerData }]);
-      });
 
-      room.onMessage('call-accepted', (payload: { signal: SignalData; id: string; playerData: Player }) => {
-        const peerToConnect = peersRef.current.find((peer: TPeer) => peer.peerID === payload.id);
+        room.onMessage('call-accepted', (payload: { signal: SignalData; id: string; playerData: Player }) => {
+          const peerToConnect = peersRef.current.find((peer: TPeer) => peer.peerID === payload.id);
 
-        peerToConnect?.peer.signal(payload.signal);
-      });
-
-      room.onMessage('player-left', (userID: string) => {
-        const peerToDisconnect = peersRef.current.find((peer: TPeer) => peer.peerID === userID);
-
-        if (peerToDisconnect) peerToDisconnect.peer.destroy();
-        peersRef.current.filter((peer: TPeer) => peer.peerID !== userID);
-        setPeers((users: TPeer[]) => {
-          return users.filter((user: TPeer) => user.peerID !== userID);
+          peerToConnect?.peer.signal(payload.signal);
         });
-      });
+
+        room.onMessage('player-left', (userID: string) => {
+          const peerToDisconnect = peersRef.current.find((peer: TPeer) => peer.peerID === userID);
+
+          if (peerToDisconnect) peerToDisconnect.peer.destroy();
+          peersRef.current = peersRef.current.filter((peer: TPeer) => peer.peerID !== userID);
+          setPeers((users: TPeer[]) => {
+            return users.filter((user: TPeer) => user.peerID !== userID);
+          });
+        });
+      }
+    } catch (e) {
+      toast.error('Something went wrong');
+      console.log(e);
     }
   }, [room, stream]);
 
