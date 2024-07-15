@@ -12,31 +12,37 @@ export class Background extends Phaser.Scene {
   create() {
     this.height = this.game.canvas.height;
     this.width = this.game.canvas.width;
-    this.backgroundImage = this.add
-      .tileSprite(0, 0, this.width, this.height, 'background')
-      .setOrigin(0, 0);
+    this.backgroundImage = this.add.tileSprite(0, 0, this.width, this.height, 'background').setOrigin(0, 0);
     this.backgroundImage.displayWidth = this.game.canvas.width;
     this.backgroundImage.displayHeight = this.game.canvas.height;
     // backgroundImage.x = this.game.canvas.width / 2;
     // backgroundImage.y = this.game.canvas.height / 2;
-    this.cameras.main.setBounds(
-      0,
-      0,
-      this.game.canvas.width * 2,
-      this.game.canvas.height
-    );
+    this.cameras.main.setBounds(0, 0, this.game.canvas.width * 2, this.game.canvas.height);
     // this.scene.launch('office').bringToTop('office');
+
+    const pointCount = 200;
+    const separation = 10;
+    const pointSize = 3;
+
+    for (let i = 0; i < pointCount; i++) {
+      for (let j = 0; j < pointCount; j++) {
+        const point = new Phaser.Geom.Rectangle(i * separation, j * separation, pointSize, pointSize);
+        const graphics = this.add.graphics();
+        graphics.fillRect(point.x, point.y, point.width, point.height);
+        graphics.fillStyle(0xff0000, 1);
+      }
+    }
   }
+
   launchOffice(room: Room) {
     this.scene.launch('office', { room }).bringToTop('office');
   }
 
   setRoomAtom(room: Room) {
-    console.log(room, "ATOM")
+    console.log(room, 'ATOM');
     room.onMessage('welcome', (message: string) => {
       console.log(message, 'welcome from phaser');
-    })
-    
+    });
   }
 
   update() {

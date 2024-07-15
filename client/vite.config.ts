@@ -13,14 +13,16 @@ export default defineConfig({
       'readable-stream': 'vite-compatible-readable-stream',
     },
   },
-  // define: {
-  //   global: 'window',
-  //   // 'process.env': {},
-  //   'process.env': process.env,
-  // },
-  // build: {
-  //   rollupOptions: {
-  //     external: ['window'],
-  //   },
-  // },
+  define: {
+    global: 'window',
+    'process.env': {},
+    // 'process.env': process.env,
+    // 'process.env': 'development' in process.env ? process.env : {},
+    // !('SANDBOX_URL' in process.env || 'CODESANDBOX_HOST' in process.env)
+  },
+  build: {
+    rollupOptions: {
+      external: ['window'],
+    },
+  },
 });

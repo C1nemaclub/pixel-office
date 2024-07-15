@@ -1,7 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { useRoomStore } from './store/roomStore';
-import Game from './components/Game/Game';
-import Ui from './components/Ui/Ui';
+import Spinner from './components/core/Spinner';
+// import Game from './components/Game/Game';
+// import Ui from './components/Ui/Ui';
+
+const Game = lazy(() => import('./components/Game/Game'));
+const Ui = lazy(() => import('./components/Ui/Ui'));
 
 function App() {
   const { room } = useRoomStore();
@@ -14,8 +18,10 @@ function App() {
 
   return (
     <div className='App'>
-      <Ui />
-      <Game />
+      <Suspense fallback={<Spinner />}>
+        <Ui />
+        <Game />
+      </Suspense>
     </div>
   );
 }
